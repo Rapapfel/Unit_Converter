@@ -5,3 +5,5 @@ Python Version
 Module die mit **pip** installier werden müssen
 - ifcopenshell
 - prettytable
+- packaging
+- customtkinter
