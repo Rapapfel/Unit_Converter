@@ -7,3 +7,6 @@ Module die mit **pip** installier werden müssen
 - prettytable
 - packaging
 - customtkinter
+- tkinter
+- json
+- os

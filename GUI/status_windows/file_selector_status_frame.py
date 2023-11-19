@@ -4,7 +4,7 @@ class file_selctor_status_frame(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("Fehlermeldung")
-        self.geometry("400x200")
+        self.geometry("450x200")
 
         self.widgets_erstellen()
 
