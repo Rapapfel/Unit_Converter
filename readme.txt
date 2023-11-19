@@ -10,3 +10,4 @@ Module die mit **pip** installier werden müssen
 - tkinter
 - json
 - os
+- ttkthemes

@@ -1,0 +1,28 @@
+{
+    "template_name": "Variable Volumenstromregler Parameter",
+    "last_modified": "2023-11-19 14:57:13",
+    "modified_by": "GREA",
+    "description": "Vorlage mit verschiedenen Parametern f\u00fcr variable Volumenstromregler in der L\u00fcftungstechnik.",
+    "parameters": {
+        "Volumenstrombereich": {
+            "source_unit": "m\u00b3/h",
+            "target_unit": "cfm"
+        },
+        "Druckbereich": {
+            "source_unit": "Pa",
+            "target_unit": "inch H2O"
+        },
+        "Temperaturbereich": {
+            "source_unit": "\u00b0C",
+            "target_unit": "\u00b0F"
+        },
+        "Feuchtigkeitsbereich": {
+            "source_unit": "%",
+            "target_unit": "g/kg"
+        },
+        "Steuerungssignal": {
+            "source_unit": "V",
+            "target_unit": "mA"
+        }
+    }
+}
