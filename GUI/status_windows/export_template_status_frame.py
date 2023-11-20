@@ -10,8 +10,8 @@ class export_template_status_frame(ctk.CTk):
 
     def widgets_erstellen(self):
         # Beschriftung für die Exportinformation
-        self.fehlermeldung = ctk.CTkLabel(self, text="Die Vorlage wurde erfolgreich abgespeichert!")
-        self.fehlermeldung.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+        self.Exportinformation = ctk.CTkLabel(self, text="Die Vorlage wurde erfolgreich abgespeichert!")
+        self.Exportinformation.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
         # OK-Schaltfläche zum Schließen des Fensters
         self.ok_button = ctk.CTkButton(self, text="OK", command=self.fenster_schliessen)

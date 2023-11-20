@@ -12,8 +12,8 @@ class EinheitInfoFenster(ctk.CTk):
     def widgets_erstellen(self):
         # Nachricht über die Einheit des IFCs
         nachricht = f"Das ausgewählte IFC wurde mit {self.einheit}-Einheiten erstellt."
-        self.info_label = ctk.CTkLabel(self, text=nachricht)
-        self.info_label.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+        self.Einheitsinformation = ctk.CTkLabel(self, text=nachricht)
+        self.Einheitsinformation.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
         # OK-Schaltfläche zum Schließen des Fensters
         self.ok_button = ctk.CTkButton(self, text="OK", command=self.fenster_schliessen)

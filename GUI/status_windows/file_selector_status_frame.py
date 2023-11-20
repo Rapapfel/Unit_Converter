@@ -10,7 +10,7 @@ class file_selctor_status_frame(ctk.CTk):
 
     def widgets_erstellen(self):
         # Beschriftung für die Fehlermeldung
-        self.fehlermeldung = ctk.CTkLabel(self, text="Die ausgewählte Datei ist keine gültige IFC-Datei. Versuche es erneut!")
+        self.fehlermeldung = ctk.CTkLabel(self, text="Die ausgewählte Datei konnte nicht geladen Versuche es erneut!")
         self.fehlermeldung.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
         # OK-Schaltfläche zum Schließen des Fensters
