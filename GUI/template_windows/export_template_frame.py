@@ -6,7 +6,7 @@ class ExportTemplateWindow(ctk.CTk):
     def __init__(self, selected_template_name):
         super().__init__()
         self.title("Export Vorlage")
-        self.geometry("600x200")
+        self.geometry("700x200")
 
         # Label zur Anzeige des ausgewählten Vorlagennamens
         self.label = ctk.CTkLabel(self, text=f"Wo möchten Sie die Vorlage '{selected_template_name}' abspeichern?", text_color="white")
