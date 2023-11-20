@@ -6,6 +6,7 @@ class file_selector_frame(ctk.CTk):
         super().__init__()
         self.title("Unit Changer")
         self.geometry("650x365")
+        self.selected_file_path = None  # Initialisieren Sie die Variable mit None
 
         self.widgets_erstellen()
 
@@ -39,7 +40,7 @@ class file_selector_frame(ctk.CTk):
             self.dateipfad_eingabe.delete(0, ctk.END)
             self.dateipfad_eingabe.insert(0, dateipfad)
             self.dateipfad_eingabe.configure(state='disabled')  # Deaktiviert das Eingabefeld wieder
-
+            self.selected_file_path = dateipfad  # Speichern Sie den ausgewählten Dateipfad
 
     def weiter_aktion(self):
         # Platzhalter für die Aktion, die ausgeführt werden soll, wenn 'Weiter' geklickt wird
@@ -49,6 +50,9 @@ class file_selector_frame(ctk.CTk):
         # Die Anwendung schließen
         self.destroy()
 
-if __name__ == "__main__":
-    app = file_selector_frame()
-    app.mainloop()
+# if __name__ == "__main__":
+#     app = file_selector_frame()
+#     app.mainloop()
+    
+#     selected_path = app.selected_file_path
+#     print(selected_path)

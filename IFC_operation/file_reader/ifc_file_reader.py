@@ -2,12 +2,14 @@
 
 
 # Internal Modules
+
 import modules_ifc_operation as modules
 
 # Used Variables
-VAR_FILEPATH = None
 VAR_FILENAME = None
 unit_system = None
+
+
 
 # Import File and validation
 # As long as a Error occurs, input phase stays active
