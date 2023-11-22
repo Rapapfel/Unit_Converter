@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-class EinheitInfoFenster(ctk.CTk):
+class unit_status_frame(ctk.CTkToplevel):
     def __init__(self, einheit):
         super().__init__()
         self.title("Einheitsinformation")
@@ -21,8 +21,9 @@ class EinheitInfoFenster(ctk.CTk):
 
     def fenster_schliessen(self):
         self.destroy()
+        
 
 if __name__ == "__main__":
     # Erstellen und Anzeigen des Fensters mit der Nachricht über SI-Einheiten
-    app = EinheitInfoFenster("SI")
+    app = unit_status_frame("SI")
     app.mainloop()

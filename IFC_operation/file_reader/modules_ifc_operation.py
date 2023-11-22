@@ -1,6 +1,6 @@
 # Modules
 import os
-import ifcopenshell
+import ifcopenshell # Python 3.11!
 from prettytable import PrettyTable
 
 """ 
@@ -86,3 +86,4 @@ def get_general_unit_system(VAR_FILEPATH):
 
     # Default to None if unit information is not found
     return None
+

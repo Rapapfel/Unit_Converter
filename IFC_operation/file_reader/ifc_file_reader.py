@@ -9,8 +9,6 @@ import modules_ifc_operation as modules
 VAR_FILENAME = None
 unit_system = None
 
-
-
 # Import File and validation
 # As long as a Error occurs, input phase stays active
 file_imported = False
