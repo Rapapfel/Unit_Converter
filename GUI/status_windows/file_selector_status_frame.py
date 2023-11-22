@@ -2,7 +2,7 @@ import customtkinter as ctk
 
 class file_selctor_status_frame(ctk.CTkToplevel):
     def __init__(self):
-        #super().__init__()
+        super().__init__()
         self.title("Fehlermeldung")
         self.geometry("450x200")
 

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import filedialog
 
+
 class file_selector_frame(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -50,9 +51,9 @@ class file_selector_frame(ctk.CTk):
         # Die Anwendung schließen
         self.destroy()
 
-# if __name__ == "__main__":
-#     app = file_selector_frame()
-#     app.mainloop()
+if __name__ == "__main__":
+    app = file_selector_frame()
+    app.mainloop()
     
-#     selected_path = app.selected_file_path
-#     print(selected_path)
+    selected_path = app.selected_file_path
+    print(selected_path)
