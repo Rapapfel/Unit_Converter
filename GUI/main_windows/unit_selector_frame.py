@@ -2,7 +2,8 @@ import customtkinter as ctk
 
 class Unit_selector(ctk.CTkFrame):
     def __init__(self, container):
-        super().__init__(container,width=500,height=300)
+        self.fg_color = "#242424"
+        super().__init__(container,width=500,height=300, fg_color=self.fg_color)
         self.container = container
 
         self.einheitenauswahl = ctk.StringVar(value="SI")  # Standardauswahl auf "SI" setzen
@@ -35,8 +36,8 @@ class Unit_selector(ctk.CTkFrame):
         self.benutzerdefiniert_radiobutton.place(relx=0.3, rely=0.6)
 
     def weiter_aktion(self):
-        # Platzhalter für die Aktion, die ausgeführt werden soll, wenn 'Weiter' geklickt wird
-        pass
+        if self.benutzerdefiniert_radiobutton:
+            self.container.unit_selector_callback()
 
     def abbrechen_aktion(self):
         # Die Anwendung schließen

@@ -40,3 +40,6 @@ else:
     print("System Message:\tUnable to determine the general unit system.")
     modules.check_ifc_units(VAR_FILEPATH)
     unit_system = input("User input:\tChoose between SI, Imperial, Metric, Custom based on the table\t")
+
+
+

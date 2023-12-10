@@ -4,12 +4,13 @@ from IFC_operation.file_reader import modules_ifc_operation as modules # Check i
 from GUI.status_windows.file_selector_status_frame import file_selctor_status_frame as fssf # File unsuccessfully imported
 from GUI.status_windows.unit_status_frame import unit_status_frame as usf # File successfully imported
 from GUI.main_windows.unit_selector_frame import Unit_selector
+from GUI.template_windows.template_frame import BenutzerdefinierteVorlagen as bv
 
 class Window(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("Unit Changer")
-        self.geometry("1000x500")
+        self.geometry("2000x1000")
         self.current_frame = None
 
         self.fsf = fsf(self)
@@ -27,7 +28,7 @@ class Window(ctk.CTk):
     def ifc_import_callback(self, filepath):
         if modules.is_ifc_file(filepath):
             # Öffnet das Statusfenster für erfolgreichen Import
-            window_unit_status = usf("SI")  # Ersetzen mit der effektiven Variable
+            window_unit_status = usf(self, "SI")  # Ersetzen mit der effektiven Variable
             window_unit_status.mainloop()
             print("System Message:\tFile imported")
             self.frame_selection(Unit_selector(self))
@@ -39,6 +40,9 @@ class Window(ctk.CTk):
             print("System Message:\tError Message")
             return False
     
+    def unit_selector_callback(self):
+        print("dugasd")
+        self.frame_selection(bv(self))
 
     def abbrechen(self):
         self.destroy()

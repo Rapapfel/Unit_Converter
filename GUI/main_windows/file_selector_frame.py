@@ -3,7 +3,8 @@ from tkinter import filedialog
 
 class file_selector_frame(ctk.CTkFrame):
     def __init__(self, container):
-        super().__init__(container,width=750,height=365)
+        self.fg_color = "#242424"
+        super().__init__(container,width=1200,height=365, fg_color=self.fg_color)
         self.selected_file_path = None  # Initialisieren Sie die Variable mit None
         self.container = container
 
@@ -17,7 +18,7 @@ class file_selector_frame(ctk.CTkFrame):
         
         # Schaltfläche, um abzubrechen und die Anwendung zu schließen (Links)
         self.abbrechen_schaltflaeche = ctk.CTkButton(self, text="Abbrechen", command=self.anwendung_schliessen)
-        self.abbrechen_schaltflaeche.place(relx=0.2, rely=0.6, anchor=ctk.CENTER)
+        self.abbrechen_schaltflaeche.place(relx=0.3, rely=0.6, anchor=ctk.CENTER)
         
         # Schaltfläche, um den Dateipfad auszuwählen (Mitte)
         self.waehlen_schaltflaeche = ctk.CTkButton(self, text="Wählen", command=self.datei_auswaehlen)
@@ -25,10 +26,10 @@ class file_selector_frame(ctk.CTkFrame):
         
         # Schaltfläche, um zum nächsten Schritt fortzufahren (Rechts)
         self.weiter_schaltflaeche = ctk.CTkButton(self, text="Weiter", command=self.weiter_aktion)
-        self.weiter_schaltflaeche.place(relx=0.8, rely=0.6, anchor=ctk.CENTER)
+        self.weiter_schaltflaeche.place(relx=0.7, rely=0.6, anchor=ctk.CENTER)
 
         # Eingabefeld für den Dateipfad, für Benutzereingaben deaktiviert
-        self.dateipfad_eingabe = ctk.CTkEntry(self, width=600, state='disabled', placeholder_text="VAR_DATEIPFAD")
+        self.dateipfad_eingabe = ctk.CTkEntry(self, width=1100, state='disabled', placeholder_text="VAR_DATEIPFAD", justify= "center")
         self.dateipfad_eingabe.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
     def datei_auswaehlen(self):

@@ -3,31 +3,27 @@ import os
 import tkinter as tk
 from tkinter import ttk
 import customtkinter as ctk
-import tkinter.font as tkfont
 
-class BenutzerdefinierteVorlagen(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-        self.title("Benutzerdefinierte Vorlagen")
-        self.geometry("1500x400")
+class BenutzerdefinierteVorlagen(ctk.CTkFrame):
+    def __init__(self, container):
+        self.fg_color = "#242424"
+        super().__init__(container,width=1500,height=500, fg_color=self.fg_color)
+        self.container = container
 
-        # Hintergrundfarbe
-        self.bg_color = "#242424"
-        self.configure(bg=self.bg_color)
-
-        # Relativer Pfad zu den benutzerdefinierten Vorlagen
+        # # Relativer Pfad zu den benutzerdefinierten Vorlagen
         self.templates_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'Templates', 'custom templates')
 
-        # Überschrift
-        self.label = ctk.CTkLabel(self, text="Wähle eine benutzerdefinierte Vorlage aus.", bg_color=self.bg_color, text_color="white")
-        self.label.pack(pady=10)
+        # # Überschrift
+        # Beschriftung
+        self.beschriftung = ctk.CTkLabel(self, text="Wähle eine benutzerdefinierte Vorlage aus", fg_color=self.fg_color, text_color="white")
+        self.beschriftung.place(relx=0.5, rely=0.1, anchor=ctk.CENTER)
 
         # Knöpfe (kleiner gemacht und oben angezeigt)
-        self.button_frame = ctk.CTkFrame(self)
-        self.button_frame.pack(pady=10)
+        self.button_frame = ctk.CTkFrame(self,width=700,height=40, fg_color=self.fg_color)
+        self.button_frame.place(relx=0.5, rely=0.2, anchor=ctk.CENTER)
 
         self.neu_button = ctk.CTkButton(self.button_frame, text="Neu", width=80, height=24)
-        self.neu_button.pack(side="left", padx=5)
+        self.neu_button.pack(side="left", padx=5, pady=5)
 
         self.bearbeiten_button = ctk.CTkButton(self.button_frame, text="Bearbeiten", width=80, height=24)
         self.bearbeiten_button.pack(side="left", padx=5)
@@ -42,11 +38,11 @@ class BenutzerdefinierteVorlagen(ctk.CTk):
         self.export_button.pack(side="left", padx=5)
 
         # Rahmen um die Tabelle
-        self.table_frame = ctk.CTkFrame(self, bg_color="#242424")
+        self.table_frame = ctk.CTkFrame(self, fg_color=self.fg_color)
         self.table_frame.pack(fill="both", expand=False, padx=10)
 
         # Erstellen Sie eine Treeview mit maximal 5 Zeilen sichtbar
-        self.table = ttk.Treeview(self.table_frame, columns=("Name", "Datum", "Von", "Beschreibung"), show="headings", height=5)
+        self.table = ttk.Treeview(self.table_frame, columns=("Name", "Datum", "Von", "Beschreibung"), show="headings", height=5,)
         self.table.heading("Name", text="Vorlagenname", anchor="w")
         self.table.heading("Datum", text="Zuletzt geändert", anchor="w")
         self.table.heading("Von", text="Geändert von", anchor="w")
@@ -55,7 +51,7 @@ class BenutzerdefinierteVorlagen(ctk.CTk):
 
         # Stil für den Treeview
         style = ttk.Style()
-        style.configure("Treeview", background=self.bg_color, fieldbackground=self.bg_color, foreground="white")
+        style.configure("Treeview", background=self.fg_color, fieldbackground=self.fg_color, foreground="white")
         style.map("Treeview", background=[("selected", "#0078d7")], foreground=[("selected", "white")])
         style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
 
@@ -69,7 +65,7 @@ class BenutzerdefinierteVorlagen(ctk.CTk):
         self.table.configure(yscrollcommand=self.scrollbar.set)
 
         # Große Knöpfe
-        self.abbruch_button = ctk.CTkButton(self, text="Abbrechen", command=self.destroy, width=120, height=32)
+        self.abbruch_button = ctk.CTkButton(self, text="Abbrechen", command=self.abbrechen_aktion, width=120, height=32)
         self.abbruch_button.place(relx=0.4, rely=0.7, anchor=ctk.CENTER)
 
         self.weiter_button = ctk.CTkButton(self, text="Weiter", width=120, height=32)
@@ -99,6 +95,10 @@ class BenutzerdefinierteVorlagen(ctk.CTk):
         self.table.column("Datum", width=120, stretch=tk.NO)
         self.table.column("Von", width=80, stretch=tk.NO)
         self.table.column("Beschreibung", width=900, stretch=tk.NO)
+
+    def abbrechen_aktion(self):
+        # Die Anwendung schließen
+        self.container.abbrechen()
 
 if __name__ == "__main__":
     app = BenutzerdefinierteVorlagen()
