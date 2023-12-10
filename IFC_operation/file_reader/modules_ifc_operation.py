@@ -87,3 +87,38 @@ def get_general_unit_system(VAR_FILEPATH):
     # Default to None if unit information is not found
     return None
 
+# alle IFC Parameter in Dictionary
+def extract_pset_parameters(VAR_FILEPATH):
+    try:
+        ifc_file = ifcopenshell.open(VAR_FILEPATH)
+        pset_dict = {}
+
+        # Durchlaufen aller Elemente, die Eigenschaften haben könnten
+        for element in ifc_file.by_type("IfcElement"):
+            # Durchlaufen aller Definitionen, die einem Element zugeordnet sind
+            for definition in element.IsDefinedBy:
+                if definition.is_a("IfcRelDefinesByProperties"):
+                    pset = definition.RelatingPropertyDefinition
+                    if pset.is_a("IfcPropertySet"):
+                        pset_name = pset.Name
+                        property_names = [prop.Name for prop in pset.HasProperties]
+                        # Hinzufügen oder Aktualisieren des Pset-Namens im Dictionary
+                        if pset_name not in pset_dict:
+                            pset_dict[pset_name] = property_names
+                        else:
+                            # Doppelte Eigenschaftsnamen vermeiden
+                            pset_dict[pset_name].extend(x for x in property_names if x not in pset_dict[pset_name])
+                    elif pset.is_a("IfcElementQuantity"):
+                        # Ähnliche Logik kann für IfcElementQuantity und andere Arten von Eigenschaftsdefinitionen angewendet werden
+                        pass
+
+        # Entfernen von Duplikaten und Sortieren der Eigenschaftsnamen in jeder Pset-Liste
+        for pset_name in pset_dict:
+            pset_dict[pset_name] = sorted(set(pset_dict[pset_name]))
+
+        return pset_dict
+
+    except Exception as e:
+        print(f"Fehler beim Extrahieren von Pset-Parametern: {e}")
+        return {}
+

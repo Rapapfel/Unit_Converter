@@ -13,7 +13,6 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         # # Relativer Pfad zu den benutzerdefinierten Vorlagen
         self.templates_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'Templates', 'custom templates')
 
-        # # Überschrift
         # Beschriftung
         self.beschriftung = ctk.CTkLabel(self, text="Wähle eine benutzerdefinierte Vorlage aus", fg_color=self.fg_color, text_color="white")
         self.beschriftung.place(relx=0.5, rely=0.1, anchor=ctk.CENTER)
@@ -41,8 +40,8 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.table_frame = ctk.CTkFrame(self, fg_color=self.fg_color)
         self.table_frame.pack(fill="both", expand=False, padx=10)
 
-        # Erstellen Sie eine Treeview mit maximal 5 Zeilen sichtbar
-        self.table = ttk.Treeview(self.table_frame, columns=("Name", "Datum", "Von", "Beschreibung"), show="headings", height=5,)
+        # Erstellen Sie eine Treeview mit maximal 7 Zeilen sichtbar
+        self.table = ttk.Treeview(self.table_frame, columns=("Name", "Datum", "Von", "Beschreibung"), show="headings", height=7,)
         self.table.heading("Name", text="Vorlagenname", anchor="w")
         self.table.heading("Datum", text="Zuletzt geändert", anchor="w")
         self.table.heading("Von", text="Geändert von", anchor="w")
@@ -78,7 +77,7 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.set_initial_column_width()
 
         # Tabelle horizontal in der Mitte des Fensters zentrieren
-        self.table_frame.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
+        self.table_frame.place(relx=0.5, rely=0.45, anchor=ctk.CENTER)
 
     def load_templates(self):
         for index, filename in enumerate(os.listdir(self.templates_dir)):
