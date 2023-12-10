@@ -1,10 +1,9 @@
 import customtkinter as ctk
 
-class EinheitenKonverter(ctk.CTk):
-    def __init__(self):
-        super().__init__()
-        self.title("Einheitenkonverter")
-        self.geometry("500x300")
+class Unit_selector(ctk.CTkFrame):
+    def __init__(self, container):
+        super().__init__(container,width=500,height=300)
+        self.container = container
 
         self.einheitenauswahl = ctk.StringVar(value="SI")  # Standardauswahl auf "SI" setzen
         self.widgets_erstellen()
@@ -40,8 +39,9 @@ class EinheitenKonverter(ctk.CTk):
         pass
 
     def abbrechen_aktion(self):
-        self.destroy()
+        # Die Anwendung schließen
+        self.container.abbrechen()
 
 if __name__ == "__main__":
-    app = EinheitenKonverter()
+    app = Unit_selector()
     app.mainloop()

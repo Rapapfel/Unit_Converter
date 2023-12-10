@@ -1,13 +1,11 @@
 import customtkinter as ctk
 from tkinter import filedialog
 
-class file_selector_frame(ctk.CTk):
-    def __init__(self, import_callback=None):
-        super().__init__()
-        self.title("Unit Changer")
-        self.geometry("750x365")
+class file_selector_frame(ctk.CTkFrame):
+    def __init__(self, container):
+        super().__init__(container,width=750,height=365)
         self.selected_file_path = None  # Initialisieren Sie die Variable mit None
-        self.import_callback = import_callback  # Callback-Funktion für den Import
+        self.container = container
 
         self.widgets_erstellen()
 
@@ -45,14 +43,14 @@ class file_selector_frame(ctk.CTk):
             self.dateipfad_eingabe.configure(state='disabled')  # Deaktiviert das Eingabefeld wieder
 
     def weiter_aktion(self):
-        if self.selected_file_path and self.import_callback:
-            self.import_callback(self.selected_file_path)
+        if self.selected_file_path:
+            self.container.ifc_import_callback(self.selected_file_path)
 
         
 
     def anwendung_schliessen(self):
         # Die Anwendung schließen
-        self.destroy()
+        self.container.abbrechen()
 
 if __name__ == "__main__":
     app = file_selector_frame()

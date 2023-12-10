@@ -5,6 +5,7 @@ class end_status_frame(ctk.CTk):
         super().__init__()
         self.title("Fertig")
         self.geometry("450x200")
+        self.attributes("-topmost",True)
 
         self.widgets_erstellen()
 

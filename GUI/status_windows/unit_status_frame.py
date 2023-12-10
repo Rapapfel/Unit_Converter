@@ -5,6 +5,7 @@ class unit_status_frame(ctk.CTkToplevel):
         super().__init__()
         self.title("Einheitsinformation")
         self.geometry("400x200")
+        self.attributes("-topmost",True)
 
         self.einheit = einheit
         self.widgets_erstellen()
@@ -20,6 +21,7 @@ class unit_status_frame(ctk.CTkToplevel):
         self.ok_button.place(relx=0.5, rely=0.7, anchor=ctk.CENTER)
 
     def fenster_schliessen(self):
+        self.quit()
         self.destroy()
         
 

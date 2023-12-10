@@ -5,6 +5,7 @@ class file_selctor_status_frame(ctk.CTkToplevel):
         super().__init__()
         self.title("Fehlermeldung")
         self.geometry("450x200")
+        self.attributes("-topmost",True)
 
         self.widgets_erstellen()
 
