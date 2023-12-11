@@ -10,8 +10,15 @@ from GUI.template_windows.neu_template_frame import Neu_template_frame as ntf
 class Window(ctk.CTk):
     def __init__(self):
         super().__init__()
+        # Screen Size, Windows size and position
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()       
+        window_width = screen_width // 2
+        window_height = screen_height // 2
+        x_position = (screen_width - window_width) // 2
+        y_position = (screen_height - window_height) // 2
         self.title("Einheitenaustausch")
-        self.geometry("2000x1000")
+        self.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
         self.current_frame = None
         self.parameter_dict = {}  # Initialisiere parameter_dict hier
 
