@@ -24,6 +24,7 @@ class Window(ctk.CTk):
 
         self.fsf = fsf(self)
         self.frame_selection(self.fsf)
+        # Loading Bar
         print("Fertig")
 
     def frame_selection(self, frame):
