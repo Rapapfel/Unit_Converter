@@ -5,6 +5,9 @@ import customtkinter as ctk
 class Neu_template_frame(ctk.CTkFrame):
     def __init__(self, container, parameter_dict):
         self.fg_color = "#242424"
+        self.name_template = ""
+        self.bearbeitet_durch = ""
+        self.beschreibung_template = ""
         super().__init__(container, width=800, height=600, fg_color=self.fg_color)
         self.container = container
         self.parameter_dict = parameter_dict
@@ -42,6 +45,14 @@ class Neu_template_frame(ctk.CTkFrame):
         self.add_row_button = ctk.CTkButton(self, text="+", command=self.add_row)
         self.add_row_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
+        # Zusätzliche Eingabefelder für Template-Informationen
+        self.name_template_entry = tk.Entry(self, background=self.fg_color, foreground="white")
+        self.name_template_entry.place(relx=0.3, rely=0.1, relwidth=0.6)
+        self.bearbeitet_durch_entry = tk.Entry(self, background=self.fg_color, foreground="white")
+        self.bearbeitet_durch_entry.place(relx=0.3, rely=0.15, relwidth=0.6)
+        self.beschreibung_template_entry = tk.Entry(self, background=self.fg_color, foreground="white")
+        self.beschreibung_template_entry.place(relx=0.3, rely=0.2, relwidth=0.6)
+
         # Button "Abbrechen" zum Hinzufügen
         self.cancel_button = ctk.CTkButton(self, text="Abbrechen")
         self.cancel_button.place(relx=0.25, rely=0.85, anchor=ctk.CENTER)
@@ -76,8 +87,6 @@ class Neu_template_frame(ctk.CTkFrame):
         for i, label_text in enumerate(info_labels):
             label = ctk.CTkLabel(self, text=label_text, fg_color=self.fg_color)
             label.place(relx=0.1, rely=0.1 + i * 0.05, anchor=ctk.W)
-            entry = tk.Entry(self, background=self.fg_color, foreground="white")
-            entry.place(relx=0.3, rely=0.1 + i * 0.05, relwidth=0.6)
 
     def add_row(self):
         if not self.rows or all(self.is_row_complete(row) for row in self.rows):
@@ -140,10 +149,15 @@ class Neu_template_frame(ctk.CTkFrame):
             param_dropdown.set("")  # Setze den Wert auf leer, wenn keine Pset ausgewählt ist
 
     def erstellen_aktion(self):
-        # Hier können Sie den Code für die Erstellung des Templates einfügen
-        # Sie können auf die Werte in den Dropdown-Listen und Eingabefeldern über die self.rows-Liste zugreifen
-        # Zum Beispiel: self.rows[0][0].get() gibt den ausgewählten Wert der ersten Pset-Dropdown-Liste zurück
-        return
+        self.name_template = self.name_template_entry.get()
+        self.bearbeitet_durch = self.bearbeitet_durch_entry.get()
+        self.beschreibung_template = self.beschreibung_template_entry.get()
+        selected_parameters = self.container.transform_selected_parameters_to_dict(self)
+        print("Name des Templates:", self.name_template)
+        print("Zuletzt bearbeitet durch:", self.bearbeitet_durch)
+        print("Beschreibung des Templates:", self.beschreibung_template)
+        print("Ausgewählte Parameter für das Template:")
+        print(selected_parameters)
 
 if __name__ == "__main__":
     parameter_dict = {

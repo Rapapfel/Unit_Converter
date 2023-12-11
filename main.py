@@ -1,3 +1,5 @@
+import tkinter as tk
+from tkinter import ttk
 import customtkinter as ctk
 from GUI.main_windows.file_selector_frame import file_selector_frame as fsf
 from IFC_operation.file_reader import modules_ifc_operation as modules
@@ -13,7 +15,7 @@ class Window(ctk.CTk):
         self.title("Einheitenaustausch")
         self.geometry("2000x1000")
         self.current_frame = None
-        self.parameter_dict = {}  # Initialisiere parameter_dict hier
+        self.parameter_dict = {}
 
         self.fsf = fsf(self)
         self.frame_selection(self.fsf)
@@ -44,14 +46,37 @@ class Window(ctk.CTk):
         return self.fsf.selected_file_path
 
     def unit_selector_callback(self):
-        print("Ausgewählt")
         self.frame_selection(bv(self))
 
     def neu_template_frame_callback(self):
         self.frame_selection(ntf(self, self.parameter_dict))
 
     def erstellen_template_callback(self):
-        self.erstellen_template_callback(bv(self))        
+        neu_template_frame_instance = ntf(self, self.parameter_dict)
+        selected_parameters = self.transform_selected_parameters_to_dict(neu_template_frame_instance)
+        self.name_template = self.name_template_entry.get()
+        self.bearbeitet_durch = self.bearbeitet_durch_entry.get()
+        self.beschreibung_template = self.beschreibung_template_entry.get()
+        print("Ausgewählte Parameter für das Template:")
+        print(selected_parameters)
+        print("Name des Templates:", self.name_template)
+        print("Zuletzt bearbeitet durch:", self.bearbeitet_durch)
+        print("Beschreibung des Templates:", self.beschreibung_template)
+
+    def transform_selected_parameters_to_dict(self, template_frame):
+        selected_parameters = {}
+        for row_widgets in template_frame.rows:
+            pset_dropdown, param_dropdown, source_unit, target_unit, _ = row_widgets
+            if pset_dropdown.get() and param_dropdown.get() and source_unit.get() and target_unit.get():
+                pset_name = pset_dropdown.get()
+                param_name = param_dropdown.get()
+                source_unit_name = source_unit.get()
+                target_unit_name = target_unit.get()
+                selected_parameters[f"{pset_name} - {param_name}"] = {
+                    "source_unit": source_unit_name,
+                    "target_unit": target_unit_name
+                }
+        return selected_parameters
 
     def abbrechen(self):
         self.destroy()
