@@ -1,10 +1,11 @@
 import customtkinter as ctk
 from tkinter import filedialog
+from tkinter import ttk
 
 class file_selector_frame(ctk.CTkFrame):
-    def __init__(self, container):
+    def __init__(self, container, X, Y):
         self.fg_color = "#242424"
-        super().__init__(container,width=1200,height=365, fg_color=self.fg_color)
+        super().__init__(container,width=X,height=Y, fg_color=self.fg_color)
         self.selected_file_path = None  # Initialisieren Sie die Variable mit None
         self.container = container
 

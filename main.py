@@ -22,9 +22,11 @@ class Window(ctk.CTk):
         self.current_frame = None
         self.parameter_dict = {}  # Initialisiere parameter_dict hier
 
-        self.fsf = fsf(self)
+        # File selector Frame
+        X = window_width - 60
+        Y = window_height
+        self.fsf = fsf(self,X,Y)
         self.frame_selection(self.fsf)
-        # Loading Bar
         print("Fertig")
 
     def frame_selection(self, frame):
