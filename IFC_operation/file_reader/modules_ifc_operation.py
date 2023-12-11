@@ -18,7 +18,7 @@ def is_ifc_file(VAR_FILEPATH:str):
         # Try to open the IFC file
         ifc_file = ifcopenshell.open(VAR_FILEPATH)
         return True
-    except ifcopenshell.exceptions.Error as e:
+    except Exception as e:
         # If it's not a IFC file or corrupted it returns False
         return False
 

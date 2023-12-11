@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from GUI.main_windows.file_selector_frame import file_selector_frame as fsf
-from IFC_operation.file_reader import modules_ifc_operation as modules
+from ifc_operation.file_reader import modules_ifc_operation as modules
 from GUI.status_windows.file_selector_status_frame import file_selctor_status_frame as fssf
 from GUI.status_windows.unit_status_frame import unit_status_frame as usf
 from GUI.main_windows.unit_selector_frame import Unit_selector
