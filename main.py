@@ -60,20 +60,19 @@ class Window(ctk.CTk):
     def neu_template_frame_callback(self):
         self.frame_selection(ntf(self, self.parameter_dict))
 
-    def erstellen_template_callback(self):
-        neu_template_frame_instance = ntf(self, self.parameter_dict)
-        selected_parameters = neu_template_frame_instance.transform_selected_parameters_to_dict()
-        name_template = neu_template_frame_instance.name_template
-        bearbeitet_durch = neu_template_frame_instance.bearbeitet_durch
-        beschreibung_template = neu_template_frame_instance.beschreibung_template
+    def erstellen_template_callback(self, name_template, bearbeitet_durch, beschreibung_template, selected_parameters):
         
-        ith.create_json_file(name_template, bearbeitet_durch, beschreibung_template, selected_parameters)
-        
-        print("Ausgewählte Parameter für das Template:")
-        print(selected_parameters)
+        # Führen Sie hier den gewünschten Code aus, um die Parameter auszudrucken
         print("Name des Templates:", name_template)
         print("Zuletzt bearbeitet durch:", bearbeitet_durch)
         print("Beschreibung des Templates:", beschreibung_template)
+        print("Ausgewählte Parameter für das Template:", selected_parameters)
+        
+        ith.create_json_file(name_template, bearbeitet_durch, beschreibung_template, selected_parameters)
+
+        self.frame_selection(bv(self))
+
+
 
     def abbrechen(self):
         self.destroy()

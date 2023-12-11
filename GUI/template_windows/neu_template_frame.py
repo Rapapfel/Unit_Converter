@@ -148,15 +148,38 @@ class Neu_template_frame(ctk.CTkFrame):
         else:
             param_dropdown.set("")  # Setze den Wert auf leer, wenn keine Pset ausgewählt ist
 
+    def transform_selected_parameters_to_dict(self):
+        selected_parameters = {}
+        for row_widgets in self.rows:
+            pset_dropdown, param_dropdown, source_unit, target_unit, _ = row_widgets
+            if pset_dropdown.get() and param_dropdown.get() and source_unit.get() and target_unit.get():
+                pset_name = pset_dropdown.get()
+                param_name = param_dropdown.get()
+                source_unit_name = source_unit.get()
+                target_unit_name = target_unit.get()
+                selected_parameters[f"{pset_name} - {param_name}"] = {
+                    "source_unit": source_unit_name,
+                    "target_unit": target_unit_name
+                }
+        return selected_parameters
+
     def erstellen_aktion(self):
-        self.name_template = self.name_template_entry.get()
-        self.bearbeitet_durch = self.bearbeitet_durch_entry.get()
-        self.beschreibung_template = self.beschreibung_template_entry.get()
-        selected_parameters = self.container.transform_selected_parameters_to_dict(self)
-        print("Name des Templates:", self.name_template)
-        print("Zuletzt bearbeitet durch:", self.bearbeitet_durch)
-        print("Beschreibung des Templates:", self.beschreibung_template)
-        print("Ausgewählte Parameter für das Template:", selected_parameters)
+        if self.erstellen_button:
+            name_template = self.name_template_entry.get()
+            bearbeitet_durch = self.bearbeitet_durch_entry.get()
+            beschreibung_template = self.beschreibung_template_entry.get()
+            selected_parameters = self.transform_selected_parameters_to_dict()
+
+            # Hier wird die Methode erstellen_template_callback aus main.py aufgerufen
+            self.container.erstellen_template_callback(name_template, bearbeitet_durch, beschreibung_template, selected_parameters)
+            
+            if __name__ == "__main__":
+                print("Name des Templates:", name_template)
+                print("Zuletzt bearbeitet durch:", bearbeitet_durch)
+                print("Beschreibung des Templates:", beschreibung_template)
+                print("Ausgewählte Parameter für das Template:", selected_parameters)
+            
+            return name_template, bearbeitet_durch, beschreibung_template, selected_parameters
 
 if __name__ == "__main__":
     parameter_dict = {
