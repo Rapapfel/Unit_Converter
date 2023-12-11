@@ -72,8 +72,6 @@ class Window(ctk.CTk):
 
         self.frame_selection(bv(self))
 
-
-
     def abbrechen(self):
         self.destroy()
 

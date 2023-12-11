@@ -13,15 +13,15 @@ def create_json_file(template_name, modified_by, description, parameter_data):
         "parameters": parameter_data
     }
 
-    # Korrigierter Pfad unter Verwendung von Raw String (r)
-    json_filename = os.path.join(r"C:\Users\ragre\OneDrive - Hochschule Luzern\DC_Scripting\unit_changer\Templates\custom_templates", f"{template_name}.json")
+    # Relativer Pfad zur JSON-Datei im Verzeichnis "Templates/custom_templates"
+    json_filename = os.path.join("Templates/custom_templates", f"{template_name}.json")
     
     with open(json_filename, 'w', encoding='utf-8') as json_file:
         json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
 # Beispielaufruf der Funktion
 if __name__ == "__main__":
-    template_name = "Monoblock Parameter9"
+    template_name = "Monoblock Paramet20"
     modified_by = "GREA"
     description = "Vorlage mit verschiedenen Parametern für Monoblock-Geräte in der Kältetechnik."
     parameters = {
