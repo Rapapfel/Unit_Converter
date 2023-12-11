@@ -29,7 +29,7 @@ class file_selector_frame(ctk.CTkFrame):
         self.weiter_schaltflaeche.place(relx=0.7, rely=0.6, anchor=ctk.CENTER)
 
         # Eingabefeld für den Dateipfad, für Benutzereingaben deaktiviert
-        self.dateipfad_eingabe = ctk.CTkEntry(self, width=1100, state='disabled', placeholder_text="VAR_DATEIPFAD", justify= "center")
+        self.dateipfad_eingabe = ctk.CTkEntry(self, width=900, state='disabled', placeholder_text="VAR_DATEIPFAD", justify= "center")
         self.dateipfad_eingabe.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
     def datei_auswaehlen(self):

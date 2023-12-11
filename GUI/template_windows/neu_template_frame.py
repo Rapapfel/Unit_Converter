@@ -3,14 +3,14 @@ from tkinter import ttk
 import customtkinter as ctk
 
 class Neu_template_frame(ctk.CTkFrame):
-    def __init__(self, container, parameter_dict):
+    def __init__(self, container, parameter_dict, name_template="", bearbeitet_durch="", beschreibung_template=""):
         self.fg_color = "#242424"
-        self.name_template = ""
-        self.bearbeitet_durch = ""
-        self.beschreibung_template = ""
         super().__init__(container, width=800, height=600, fg_color=self.fg_color)
         self.container = container
         self.parameter_dict = parameter_dict
+        self.name_template = name_template
+        self.bearbeitet_durch = bearbeitet_durch
+        self.beschreibung_template = beschreibung_template
 
         # Stil für ttk Widgets konfigurieren
         style = ttk.Style()
@@ -156,8 +156,7 @@ class Neu_template_frame(ctk.CTkFrame):
         print("Name des Templates:", self.name_template)
         print("Zuletzt bearbeitet durch:", self.bearbeitet_durch)
         print("Beschreibung des Templates:", self.beschreibung_template)
-        print("Ausgewählte Parameter für das Template:")
-        print(selected_parameters)
+        print("Ausgewählte Parameter für das Template:", selected_parameters)
 
 if __name__ == "__main__":
     parameter_dict = {
