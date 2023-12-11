@@ -17,14 +17,14 @@ class Neu_template_frame(ctk.CTkFrame):
 
         # Container Frame für das Raster und den Scrollbar
         self.container_frame = ctk.CTkFrame(self, fg_color=self.fg_color)
-        self.container_frame.place(relx=0.1, rely=0.5, relwidth=0.8, relheight=0.4, anchor=ctk.W)  # Änderung: Verschiebung nach unten
+        self.container_frame.place(relx=0.1, rely=0.5, relwidth=0.8, relheight=0.4, anchor=ctk.W)
 
         # Canvas für Scrollbar-Funktionalität
-        self.canvas = tk.Canvas(self.container_frame, bg=self.fg_color, highlightthickness=0)  # Änderung: Rahmenfarbe entfernt
+        self.canvas = tk.Canvas(self.container_frame, bg=self.fg_color, highlightthickness=0)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         # Scrollbar hinzufügen
-        self.scrollbar = ctk.CTkScrollbar(self.container_frame, command=self.canvas.yview, fg_color=self.fg_color)  # Änderung: Rahmenfarbe gesetzt
+        self.scrollbar = ctk.CTkScrollbar(self.container_frame, command=self.canvas.yview, fg_color=self.fg_color)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
@@ -47,7 +47,7 @@ class Neu_template_frame(ctk.CTkFrame):
         self.cancel_button.place(relx=0.25, rely=0.85, anchor=ctk.CENTER)
 
         # Button "Template erstellen" zum Hinzufügen
-        self.erstellen_button = ctk.CTkButton(self, text="Template erstellen")
+        self.erstellen_button = ctk.CTkButton(self, text="Template erstellen", command=self.erstellen_aktion)
         self.erstellen_button.place(relx=0.75, rely=0.85, anchor=ctk.CENTER)
 
         # Füge oben drei Eingabezeilen hinzu
@@ -67,10 +67,9 @@ class Neu_template_frame(ctk.CTkFrame):
         for i, title in enumerate(titles):
             label = ctk.CTkLabel(self.grid_frame, text=title, fg_color=self.fg_color)
             label.grid(row=0, column=i, sticky="nsew")
-            
-            # Ändern Sie die Breite der "Parameter"-Spalte
+
             if title == "Parameter":
-                self.grid_frame.grid_columnconfigure(i, minsize=220)  # Passen Sie die Breite nach Bedarf an
+                self.grid_frame.grid_columnconfigure(i, minsize=220)
 
     def add_info_entries(self):
         info_labels = ["Name des Templates:", "Zuletzt bearbeitet durch:", "Beschreibung:"]
@@ -90,7 +89,6 @@ class Neu_template_frame(ctk.CTkFrame):
     def create_row_widgets(self, row_index):
         widgets = []
 
-        # Erstellen und Platzieren von Widgets für die neue Zeile
         pset_var = tk.StringVar()
         pset_dropdown = ttk.Combobox(self.grid_frame, textvariable=pset_var, values=list(self.parameter_dict.keys()), state="readonly", style="TCombobox")
         pset_dropdown.grid(row=row_index, column=0, sticky="nsew")
@@ -101,11 +99,11 @@ class Neu_template_frame(ctk.CTkFrame):
         param_dropdown.grid(row=row_index, column=1, sticky="nsew")
         widgets.append(param_dropdown)
 
-        source_unit = tk.Entry(self.grid_frame, background=self.fg_color, foreground="white", justify="center")  # Text in der Mitte ausrichten
+        source_unit = tk.Entry(self.grid_frame, background=self.fg_color, foreground="white", justify="center")
         source_unit.grid(row=row_index, column=2, sticky="nsew")
         widgets.append(source_unit)
 
-        target_unit = tk.Entry(self.grid_frame, background=self.fg_color, foreground="white", justify="center")  # Text in der Mitte ausrichten
+        target_unit = tk.Entry(self.grid_frame, background=self.fg_color, foreground="white", justify="center")
         target_unit.grid(row=row_index, column=3, sticky="nsew")
         widgets.append(target_unit)
 
@@ -113,39 +111,39 @@ class Neu_template_frame(ctk.CTkFrame):
         remove_button.grid(row=row_index, column=4, sticky="nsew")
         widgets.append(remove_button)
 
-        pset_dropdown.bind("<<ComboboxSelected>>", lambda event: self.update_param_dropdown(event, pset_dropdown, param_dropdown))
+        pset_dropdown.bind("<<ComboboxSelected>>", lambda event, pset_dropdown=pset_dropdown, param_dropdown=param_dropdown: self.update_param_dropdown(event, pset_dropdown, param_dropdown))
 
         return widgets
-
-    def is_row_complete(self, row_widgets):
-        return all(widget.get() != "" for widget in row_widgets[:3])
-
-    def update_param_dropdown(self, event, pset_dropdown, param_dropdown):
-        selected_pset = pset_dropdown.get()
-        param_dropdown["values"] = self.parameter_dict.get(selected_pset, [])
-        param_dropdown.set("")
-
-    def remove_row(self, row_index):
-        for widget in self.rows[row_index - 1]:
-            widget.grid_forget()
-        self.rows.pop(row_index - 1)
-        self.reorganize_rows()
-        self.update_scrollregion()
-
-    def reorganize_rows(self):
-        for i, row_widgets in enumerate(self.rows, start=1):
-            for j, widget in enumerate(row_widgets):
-                widget.grid(row=i, column=j, sticky="nsew")
 
     def update_scrollregion(self):
         self.grid_frame.update_idletasks()
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
-    def on_frame_configure(self, event):
-        self.canvas.itemconfig(self.canvas_frame, width=event.width)
-
     def scroll_canvas_area(self, event, canvas):
-        canvas.yview_scroll(-1 * (event.delta // 120), "units")
+        canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+    def is_row_complete(self, row_widgets):
+        pset_dropdown, param_dropdown, source_unit, target_unit, remove_button = row_widgets
+        return pset_dropdown.get() and param_dropdown.get() and source_unit.get() and target_unit.get()
+
+    def remove_row(self, row_index):
+        widgets_to_remove = self.rows.pop(row_index - 1)
+        for widget in widgets_to_remove:
+            widget.destroy()
+        self.update_scrollregion()
+
+    def update_param_dropdown(self, event, pset_dropdown, param_dropdown):
+        selected_pset = pset_dropdown.get()
+        if selected_pset:
+            param_dropdown["values"] = self.parameter_dict[selected_pset]
+        else:
+            param_dropdown.set("")  # Setze den Wert auf leer, wenn keine Pset ausgewählt ist
+
+    def erstellen_aktion(self):
+        # Hier können Sie den Code für die Erstellung des Templates einfügen
+        # Sie können auf die Werte in den Dropdown-Listen und Eingabefeldern über die self.rows-Liste zugreifen
+        # Zum Beispiel: self.rows[0][0].get() gibt den ausgewählten Wert der ersten Pset-Dropdown-Liste zurück
+        return
 
 if __name__ == "__main__":
     parameter_dict = {

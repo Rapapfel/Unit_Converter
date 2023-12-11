@@ -11,7 +11,7 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.container = container
 
         # # Relativer Pfad zu den benutzerdefinierten Vorlagen
-        self.templates_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'Templates', 'custom templates')
+        self.templates_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'Templates', 'custom_templates')
 
         # Beschriftung
         self.beschriftung = ctk.CTkLabel(self, text="Wähle eine benutzerdefinierte Vorlage aus", fg_color=self.fg_color, text_color="white")
@@ -21,7 +21,7 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.button_frame = ctk.CTkFrame(self,width=700,height=40, fg_color=self.fg_color)
         self.button_frame.place(relx=0.5, rely=0.2, anchor=ctk.CENTER)
 
-        self.neu_button = ctk.CTkButton(self.button_frame, text="Neu", width=80, height=24)
+        self.neu_button = ctk.CTkButton(self.button_frame, text="Neu", width=80, height=24, command=self.neu_button_aktion)
         self.neu_button.pack(side="left", padx=5, pady=5)
 
         self.bearbeiten_button = ctk.CTkButton(self.button_frame, text="Bearbeiten", width=80, height=24)
@@ -94,6 +94,10 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.table.column("Datum", width=120, stretch=tk.NO)
         self.table.column("Von", width=80, stretch=tk.NO)
         self.table.column("Beschreibung", width=900, stretch=tk.NO)
+    
+    def neu_button_aktion(self):
+        if self.neu_button:
+            self.container.neu_template_frame_callback()
 
     def abbrechen_aktion(self):
         # Die Anwendung schließen
