@@ -60,6 +60,9 @@ class Window(ctk.CTk):
     def neu_template_frame_callback(self):
         self.frame_selection(ntf(self, self.parameter_dict))
 
+    def abbrechen_template_callback(self):
+        self.frame_selection(bv(self))
+
     def erstellen_template_callback(self, name_template, bearbeitet_durch, beschreibung_template, selected_parameters):
         
         # Führen Sie hier den gewünschten Code aus, um die Parameter auszudrucken

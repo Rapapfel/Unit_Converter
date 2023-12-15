@@ -43,7 +43,7 @@ class Neu_template_frame(ctk.CTkFrame):
         self.add_row_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
          # Button "Abbrechen" zum Hinzufügen
-        self.cancel_button = ctk.CTkButton(self, text="Abbrechen")
+        self.cancel_button = ctk.CTkButton(self, text="Abbrechen", command=self.abbrechen_aktion)
         self.cancel_button.place(relx=0.25, rely=0.85, anchor=ctk.CENTER)
 
         # Button "Template erstellen" zum Hinzufügen
@@ -196,7 +196,12 @@ class Neu_template_frame(ctk.CTkFrame):
                 print("Ausgewählte Parameter für das Template:", selected_parameters)
             
             return name_template, bearbeitet_durch, beschreibung_template, selected_parameters
-        
+
+    def abbrechen_aktion(self):
+        if self.abbrechen_aktion:
+            self.container.abbrechen_template_callback()
+
+
 
 if __name__ == "__main__":
     parameter_dict = {
