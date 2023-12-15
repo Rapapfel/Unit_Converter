@@ -11,3 +11,4 @@ Module die mit **pip** installier werden müssen
 - json
 - os
 - ttkthemes
+- pint
