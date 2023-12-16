@@ -1,28 +1,16 @@
 {
-    "template_name": "Variable Volumenstromregler Parameter",
-    "last_modified": "2023-11-19 14:57:13",
+    "template_name": "VAV",
+    "last_modified": "2023-12-15 17:12:36",
     "modified_by": "GREA",
-    "description": "Vorlage mit verschiedenen Parametern f\u00fcr variable Volumenstromregler in der L\u00fcftungstechnik.",
+    "description": "ändert alle einheiten von VAV um",
     "parameters": {
-        "Volumenstrombereich": {
-            "source_unit": "m\u00b3/h",
-            "target_unit": "cfm"
+        "Pset MEP - Calc-Required throttling (Pa) - Druck": {
+            "source_unit": "pascal",
+            "target_unit": "bar"
         },
-        "Druckbereich": {
-            "source_unit": "Pa",
-            "target_unit": "inch H2O"
-        },
-        "Temperaturbereich": {
-            "source_unit": "\u00b0C",
-            "target_unit": "\u00b0F"
-        },
-        "Feuchtigkeitsbereich": {
-            "source_unit": "%",
-            "target_unit": "g/kg"
-        },
-        "Steuerungssignal": {
-            "source_unit": "V",
-            "target_unit": "mA"
+        "Pset MEP - Calc-Volumetric flow (m3/h) - Volumenstrom": {
+            "source_unit": "decimeter**3/second",
+            "target_unit": "meter**3/hour"
         }
     }
 }
