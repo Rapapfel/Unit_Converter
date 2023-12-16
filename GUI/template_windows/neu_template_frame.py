@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import customtkinter as ctk
+import os
 import json
 
 class Neu_template_frame(ctk.CTkFrame):
@@ -14,8 +15,12 @@ class Neu_template_frame(ctk.CTkFrame):
         self.beschreibung_template = beschreibung_template
 
             # Laden der Einheiten aus der JSON-Datei
-        with open(r"C:\Users\ragre\OneDrive - Hochschule Luzern\DC_Scripting\unit_changer\IFC_operation\units\units.json", "r") as file:
-            self.unit_categories = json.load(file)  # Verwenden von self hier
+       #with open(r"C:\Users\ragre\OneDrive - Hochschule Luzern\DC_Scripting\unit_changer\IFC_operation\units\units.json", "r") as file:
+           #self.unit_categories = json.load(file)  # Verwenden von self hier
+        current_script = os.path.dirname(os.path.realpath(__file__))
+        json_path = os.path.join(current_script, "..","..","IFC_operation\\units\\units.json")
+        with open(json_path, "r") as file:
+            self.unit_categories = json.load(file)
 
         style = ttk.Style()
         style.theme_use('clam')

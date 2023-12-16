@@ -1,5 +1,5 @@
 # External Modules
-
+import ifcopenshell as ifc
 
 # Internal Modules
 
@@ -25,10 +25,12 @@ while file_imported == False:
         print("System Message:\tError Message")
 
 # Extract Filename
+    # Not neccessary
 VAR_FILENAME = modules.extract_file_name(VAR_FILEPATH)
 print("System Message:\t"+VAR_FILENAME)
 
 # Check for Unit
+    # Currently not working
 wannasee = input("System Message:\tDo you want to see the Unit table? y/n\n")
 if wannasee == "y":
     modules.check_ifc_units(VAR_FILEPATH)
