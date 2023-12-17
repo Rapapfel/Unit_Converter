@@ -7,7 +7,6 @@ from sympy.physics.units import convert_to
 import sympy.physics.units as u
 import json
 
-
 """ 
 New Created Modules
 """
@@ -173,25 +172,20 @@ def extract_data_and_update_ifc(VAR_FILEPATH, template_name):
 
     # Load the IFC file
     ifc_file = ifcopenshell.open(VAR_FILEPATH)
-    print(ifc_file)
 
-    seen = set()
     for dict_packet in selected_dict.keys():
         key_list = dict_packet.split(" â€” ")
 
         # Iterate through all IfcPropertySet objects in the IFC file
-        for ifc_product in ifc_file.by_type("IfcProduct"):
-            pset_set = ifcopenshell.util.element.get_psets(ifc_product)
-            ifcopenshell.util.element.
+        for ifc_pset in ifc_file.by_type("IfcPropertySet"):
+            pset_name = ifc_pset.Name
         
             # Check if the current PSet is in the selected parameters
-            if key_list[0] in pset_set.keys():
-                ifc_pset = pset_set[key_list[0]]
-                # print(f"Processing PSet : {pset_name}")
+            if pset_name in key_list[0]:
+                # print(f"Processing PSet: {pset_name}")
                 
                 # Iterate through the properties within the PSet
-                for ifc_property in ifc_pset.keys():
-                    # print(ifc_property)
+                for ifc_property in ifc_pset.HasProperties:
                     # print(ifc_file.by_type("IfcPropertySet"))
 
                     # Extract category name from the property
