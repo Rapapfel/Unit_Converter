@@ -67,7 +67,7 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.abbruch_button = ctk.CTkButton(self, text="Abbrechen", command=self.abbrechen_aktion, width=120, height=32)
         self.abbruch_button.place(relx=0.4, rely=0.7, anchor=ctk.CENTER)
 
-        self.weiter_button = ctk.CTkButton(self, text="Weiter", width=120, height=32)
+        self.weiter_button = ctk.CTkButton(self, text="Weiter", width=120, height=32, command=self.weiter_button_aktion)
         self.weiter_button.place(relx=0.6, rely=0.7, anchor=ctk.CENTER)
 
         # Vorlagen laden
@@ -98,6 +98,15 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
     def neu_button_aktion(self):
         if self.neu_button:
             self.container.neu_template_frame_callback()
+
+    def weiter_button_aktion(self):
+        selected_item = self.table.focus()  # ID des ausgewählten Elements erhalten
+        if selected_item:
+            item_data = self.table.item(selected_item, "values")
+            if item_data and len(item_data) > 0:
+                template_name = item_data[0]  # Name des ausgewählten Templates
+                self.container.process_selected_template(template_name)
+                self.container.extract_data_and_update_ifc_callback(template_name)
 
     def abbrechen_aktion(self):
         # Die Anwendung schließen

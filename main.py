@@ -37,22 +37,20 @@ class Window(ctk.CTk):
         frame.place(relx=0.5, rely=0.5, anchor="center")
         self.current_frame = frame
     
-    def ifc_import_callback(self, filepath):
-        if modules.is_ifc_file(filepath):
+    def ifc_import_callback(self, VAR_FILEPATH):
+        if modules.is_ifc_file(VAR_FILEPATH):
             window_unit_status = usf(self, "diversen Einheiten")
             window_unit_status.mainloop()
             print("Systemnachricht:\tDatei importiert")
-            self.parameter_dict = modules.extract_pset_parameters(filepath)  # Erstelle parameter_dict hier
+            self.parameter_dict = modules.extract_pset_parameters(VAR_FILEPATH)  # Erstelle parameter_dict hier
             self.frame_selection(Unit_selector(self))
-            return True
+            self.VAR_FILEPATH = VAR_FILEPATH
+            return True, VAR_FILEPATH
         else:
             window_import_status = fssf()
             window_import_status.mainloop()
             print("Systemnachricht:\tFehlermeldung")
             return False
-    
-    def get_selected_file_path(self):
-        return self.fsf.selected_file_path
 
     def unit_selector_callback(self):
         self.frame_selection(bv(self))
@@ -74,6 +72,13 @@ class Window(ctk.CTk):
         ith.create_json_file(name_template, bearbeitet_durch, beschreibung_template, selected_parameters)
 
         self.frame_selection(bv(self))
+    
+    def process_selected_template (self,template_name):
+        print(template_name)
+        return template_name
+
+    def extract_data_and_update_ifc_callback(self, template_name):
+        modules.extract_data_and_update_ifc(self.VAR_FILEPATH, template_name)
 
     def abbrechen(self):
         self.destroy()

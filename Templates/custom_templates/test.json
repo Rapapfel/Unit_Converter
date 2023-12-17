@@ -1,0 +1,16 @@
+{
+    "template_name": "test",
+    "last_modified": "2023-12-17 16:13:29",
+    "modified_by": "asdfas",
+    "description": "adf",
+    "parameters": {
+        "Pset MEP — Calc-Pressure loss (Pa) — Druck": {
+            "source_unit": "bar",
+            "target_unit": "pascal"
+        },
+        "Pset_SlabCommon — ThermalTransmittance — Zeit": {
+            "source_unit": "hour",
+            "target_unit": "full_moon_cycle"
+        }
+    }
+}

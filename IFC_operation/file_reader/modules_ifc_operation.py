@@ -2,7 +2,11 @@
 import os
 import ifcopenshell # Python 3.11!
 from prettytable import PrettyTable
-from sympy.physics.units import *
+from sympy import symbols, sympify
+from sympy.physics.units import convert_to
+import sympy.physics.units as u
+import json
+
 
 """ 
 New Created Modules
@@ -123,13 +127,29 @@ def extract_pset_parameters(VAR_FILEPATH):
         print(f"Fehler beim Extrahieren von Pset-Parametern: {e}")
         return {}
 
-# Extract, Convert and Resave Units
-def convert_value(value, source_unit_name, target_unit_name):
-    # Convert the value using sympy's convert_to function
-    converted_value = convert_to(value * source_unit_name, target_unit_name).evalf().args[0]
-    return converted_value
+# Funktion zum Parsen der Einheiten
+def parse_unit(unit_str):
+    # Ersetzt Multiplikations- und Divisionssymbole für das Parsing
+    unit_str = unit_str.replace('/', ' / ').replace('*', ' * ')
+    # Erstellt einen sympy-Ausdruck aus dem String
+    return sympify(unit_str, locals=u.__dict__)
 
-def extract_data_and_update_ifc(ifc_file_path, selected_parameters):
+# Extract, Convert and Resave Units
+def convert_value(value, source_unit_str, target_unit_str, decimal_places=2):
+    x = symbols('x')
+    source_unit = parse_unit(source_unit_str)
+    target_unit = parse_unit(target_unit_str)
+    converted_expr = convert_to(value * source_unit, target_unit).subs(x, 1)
+    # Extrahiert den numerischen Wert
+    converted_value = converted_expr.evalf()
+    # Trennt den numerischen Wert von der Einheit
+    numeric_value = converted_value.as_coeff_Mul()[0]
+    # Rundet auf die gewünschte Anzahl von Dezimalstellen
+    rounded_value = round(float(numeric_value), decimal_places)
+    return rounded_value
+
+def extract_data_and_update_ifc(VAR_FILEPATH, template_name):
+
     """
     Imports from the IFC-File (VAR_FILEPATH) all selected Psets (dict_selected_type) with the selected properties (dict_selected_properties).
     Then converts eache of the selected properties with the already selected units to the also selected target unit.
@@ -137,49 +157,72 @@ def extract_data_and_update_ifc(ifc_file_path, selected_parameters):
     Parameters:
     - VAR_FILEPATH: Filepath
     - dict_selected_type: The Dictionary with the selected Pset's
-    - dict_selected_properties: The Dictionary with the selected
+    - dict_selected_properties: The Dictionary with the selectedfilepath
     """
+
+    # Pfad des aktuellen Skripts und Pfad zum JSON-File
+    current_script = os.path.dirname(os.path.realpath(__file__))
+    json_path = os.path.join(current_script, "..", "..", "Templates", "custom_templates",template_name+".json")
+
+    # Laden des JSON-Files
+    with open(json_path, "r") as file:
+        template_data = json.load(file)
+
+    # Extraktion der 'parameters' aus dem JSON-File
+    selected_dict = template_data.get("parameters", {})
+
     # Load the IFC file
-    ifc_file = ifcopenshell.open(ifc_file_path)
+    ifc_file = ifcopenshell.open(VAR_FILEPATH)
+    print(ifc_file)
 
-    # Iterate through all IfcPropertySet objects in the IFC file
-    for ifc_pset in ifc_file.by_type("IfcPropertySet"):
-        pset_name = ifc_pset.Name
+    seen = set()
+    for dict_packet in selected_dict.keys():
+        key_list = dict_packet.split(" â€” ")
 
-        # Check if the current PSet is in the selected parameters
-        if pset_name in selected_parameters:
-            print(f"Processing PSet: {pset_name}")
+        # Iterate through all IfcPropertySet objects in the IFC file
+        for ifc_product in ifc_file.by_type("IfcProduct"):
+            pset_set = ifcopenshell.util.element.get_psets(ifc_product)
+            ifcopenshell.util.element.
+        
+            # Check if the current PSet is in the selected parameters
+            if key_list[0] in pset_set.keys():
+                ifc_pset = pset_set[key_list[0]]
+                # print(f"Processing PSet : {pset_name}")
+                
+                # Iterate through the properties within the PSet
+                for ifc_property in ifc_pset.keys():
+                    # print(ifc_property)
+                    # print(ifc_file.by_type("IfcPropertySet"))
 
-            # Iterate through the properties within the PSet
-            for ifc_property in ifc_pset.HasProperties:
-                # Extract category name from the property
-                property_category = getattr(ifc_property, "CategoryName", None)
+                    # Extract category name from the property
+                    # property_category = getattr(ifc_property, "Name", None)
+                    property_category = ifc_property.Name
+                    # exit()
 
-                # Check if the category is in the selected parameters
-                if property_category in selected_parameters[pset_name]:
-                    category_info = selected_parameters[pset_name][property_category]
-                    source_unit_name = category_info['source_unit']
-                    target_unit_name = category_info['target_unit']
+                    # Check if the category is in the selected parameters
+                    if property_category == key_list[1]:
+                        source_unit_name = selected_dict[dict_packet]['source_unit']
+                        target_unit_name = selected_dict[dict_packet]['target_unit']
+                        print (property_category,source_unit_name, target_unit_name)
 
-                    # Access and convert property value using sympy
-                    property_value = getattr(ifc_property, "NominalValue", None)
+                        # Access and convert property value using sympy
+                        property_value = getattr(ifc_property, "NominalValue", None).wrappedValue
+                        print(property_value)
 
-                    if property_value is not None:
-                        converted_value = convert_value(property_value, source_unit_name, target_unit_name)
+                        if property_value is not None:
+                            converted_value = convert_value(property_value, source_unit_name, target_unit_name)
+                            print(converted_value)
 
-                        # Update the IFC file with the converted value
-                        setattr(ifc_property, "NominalValue", converted_value)
-
-                        # Print or log the extracted and converted information
-                        print(f"  Category: {property_category}")
-                        print(f"  Property: {ifc_property.Name}")
-                        print(f"  Source Unit: {source_unit_name}, Target Unit: {target_unit_name}")
-                        print(f"  Original Value: {property_value}")
-                        print(f"  Converted Value: {converted_value}")
-                        print("------------------------")
+                            # Update the IFC file with the converted value
+                            # setattr(ifc_property, "NominalValue.wrappedValue", converted_value)
+                            ifc_property.NominalValue.wrappedValue = converted_value
 
     # Save the modified IFC file
-    ifc_file.write(ifc_file_path)
+    ifc_file.write(VAR_FILEPATH.replace("Kopie", "Kopie1"))
+                    
+if __name__ == "__main__":
+    extract_data_and_update_ifc("C:/Users/ragre/OneDrive - Hochschule Luzern/DC_Scripting/Beispiel_IFC/Claridenstrasse 25, 8002 Zürich - Kopie.ifc", "test")
+
 
 
 

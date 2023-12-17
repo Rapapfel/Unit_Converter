@@ -14,9 +14,7 @@ class Neu_template_frame(ctk.CTkFrame):
         self.bearbeitet_durch = bearbeitet_durch
         self.beschreibung_template = beschreibung_template
 
-            # Laden der Einheiten aus der JSON-Datei
-       #with open(r"C:\Users\ragre\OneDrive - Hochschule Luzern\DC_Scripting\unit_changer\IFC_operation\units\units.json", "r") as file:
-           #self.unit_categories = json.load(file)  # Verwenden von self hier
+        # Laden der Einheiten aus der JSON-Datei
         current_script = os.path.dirname(os.path.realpath(__file__))
         json_path = os.path.join(current_script, "..","..","IFC_operation\\units\\units.json")
         with open(json_path, "r") as file:
@@ -177,7 +175,7 @@ class Neu_template_frame(ctk.CTkFrame):
                     category_name = category_unit.get()
                     source_unit_name = source_unit.get()
                     target_unit_name = target_unit.get()
-                    selected_parameters[f"{pset_name} - {param_name} - {category_name}"] = {
+                    selected_parameters[f"{pset_name} — {param_name} — {category_name}"] = {
                         "source_unit": source_unit_name,
                         "target_unit": target_unit_name
                     }
