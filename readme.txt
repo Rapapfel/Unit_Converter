@@ -11,4 +11,8 @@ Module die mit **pip** installier werden müssen
 - json
 - os
 - ttkthemes
-- pint
+- sympy
+
+return GUID und dann darf diese GUID nicht mehr aufgerufen werden
+Gleiches Bautei 7 mal iteriert, weil 7 Eigenschaften
+übeall gleichen Wert eingetragen, weil alle Bauteil gleiche Eigenschaften teilen (ignoriert, dass Bauteile einzigartig sind)

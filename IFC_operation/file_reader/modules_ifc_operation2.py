@@ -219,7 +219,7 @@ def extract_data_and_update_ifc(VAR_FILEPATH, template_name):
     # ifc_file.write(VAR_FILEPATH.replace("Kopie", "Kopie1"))
                     
 if __name__ == "__main__":
-    extract_data_and_update_ifc("C:/Users/ragre/OneDrive - Hochschule Luzern/DC_Scripting/Beispiel_IFC/Claridenstrasse 25, 8002 Zürich - Kopie.ifc", "test")
+    extract_data_and_update_ifc("C:/Users/ragre/OneDrive - Hochschule Luzern/DC_Scripting/Beispiel_IFC/Claridenstrasse 25, 8002 Zürich - Kopie.ifc", "test_2")
 
 
 

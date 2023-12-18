@@ -6,7 +6,7 @@ ifc_file = ifcopenshell.open("C:/Users/ragre/OneDrive - Hochschule Luzern/DC_Scr
 # Zählen der Komponenten
 komponenten = {}
 
-for entity in ifc_file.by_type('IfcProduct'):
+for entity in ifc_file.by_type('IfcElement'):
     entity_name = entity.is_a()
     if entity_name in komponenten:
         komponenten[entity_name] += 1

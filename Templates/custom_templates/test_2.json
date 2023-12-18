@@ -1,0 +1,20 @@
+{
+    "template_name": "test_2",
+    "last_modified": "2023-12-18 20:31:28",
+    "modified_by": "adsf",
+    "description": "asdf",
+    "parameters": {
+        "Pset MEP — Calc-Pressure loss (Pa) — Druck": {
+            "source_unit": "bar",
+            "target_unit": "pascal"
+        },
+        "Pset MEP — Calc-Volumetric flow (m3/h) — Volumenstrom": {
+            "source_unit": "meter**3/hour",
+            "target_unit": "meter**3/second"
+        },
+        "Pset MEP — Tech-Weight (kg) — Masse": {
+            "source_unit": "gram",
+            "target_unit": "kilogram"
+        }
+    }
+}

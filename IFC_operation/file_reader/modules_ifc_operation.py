@@ -179,13 +179,14 @@ def extract_data_and_update_ifc(VAR_FILEPATH, template_name):
         # Iterate through all IfcPropertySet objects in the IFC file
         for ifc_pset in ifc_file.by_type("IfcPropertySet"):
             pset_name = ifc_pset.Name
-        
+            # print(ifc_pset)
             # Check if the current PSet is in the selected parameters
             if pset_name in key_list[0]:
                 # print(f"Processing PSet: {pset_name}")
                 
                 # Iterate through the properties within the PSet
                 for ifc_property in ifc_pset.HasProperties:
+                    print("ifc_property(for)", ifc_property)
                     # print(ifc_file.by_type("IfcPropertySet"))
 
                     # Extract category name from the property
@@ -201,11 +202,13 @@ def extract_data_and_update_ifc(VAR_FILEPATH, template_name):
 
                         # Access and convert property value using sympy
                         property_value = getattr(ifc_property, "NominalValue", None).wrappedValue
+                        print("ifc_property", ifc_property)
+                        print("property-Value", property_value)
                         print(property_value)
 
                         if property_value is not None:
                             converted_value = convert_value(property_value, source_unit_name, target_unit_name)
-                            print(converted_value)
+                            print("Converted-Value", converted_value)
 
                             # Update the IFC file with the converted value
                             # setattr(ifc_property, "NominalValue.wrappedValue", converted_value)
