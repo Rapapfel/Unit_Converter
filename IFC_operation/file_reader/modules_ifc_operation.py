@@ -6,6 +6,7 @@ from sympy import symbols, sympify
 from sympy.physics.units import convert_to
 import sympy.physics.units as u
 import json
+from tqdm import tqdm
 
 """ 
 New Created Modules
@@ -172,53 +173,51 @@ def extract_data_and_update_ifc(VAR_FILEPATH, template_name):
 
     # Load the IFC file
     ifc_file = ifcopenshell.open(VAR_FILEPATH)
+    ID_set= set()
 
     for dict_packet in selected_dict.keys():
         key_list = dict_packet.split(" â€” ")
 
         # Iterate through all IfcPropertySet objects in the IFC file
-        for ifc_pset in ifc_file.by_type("IfcPropertySet"):
+        for ifc_pset in tqdm(ifc_file.by_type("IfcPropertySet")):
             pset_name = ifc_pset.Name
-            # print(ifc_pset)
             # Check if the current PSet is in the selected parameters
             if pset_name in key_list[0]:
-                # print(f"Processing PSet: {pset_name}")
-                
                 # Iterate through the properties within the PSet
                 for ifc_property in ifc_pset.HasProperties:
-                    print("ifc_property(for)", ifc_property)
-                    # print(ifc_file.by_type("IfcPropertySet"))
+                    ID = str(ifc_property).split("=")[0]
+                    if ID in ID_set:
+                        continue
+                    else:
+                        ID_set.add(ID)
 
                     # Extract category name from the property
-                    # property_category = getattr(ifc_property, "Name", None)
                     property_category = ifc_property.Name
-                    # exit()
 
                     # Check if the category is in the selected parameters
                     if property_category == key_list[1]:
                         source_unit_name = selected_dict[dict_packet]['source_unit']
                         target_unit_name = selected_dict[dict_packet]['target_unit']
-                        print (property_category,source_unit_name, target_unit_name)
+                        # print (property_category,source_unit_name, target_unit_name)
 
                         # Access and convert property value using sympy
                         property_value = getattr(ifc_property, "NominalValue", None).wrappedValue
-                        print("ifc_property", ifc_property)
-                        print("property-Value", property_value)
-                        print(property_value)
+                        # print(property_value)
 
                         if property_value is not None:
                             converted_value = convert_value(property_value, source_unit_name, target_unit_name)
-                            print("Converted-Value", converted_value)
+                            # print("Converted-Value", converted_value)
 
                             # Update the IFC file with the converted value
-                            # setattr(ifc_property, "NominalValue.wrappedValue", converted_value)
                             ifc_property.NominalValue.wrappedValue = converted_value
+
 
     # Save the modified IFC file
     ifc_file.write(VAR_FILEPATH.replace("Kopie", "Kopie1"))
+
                     
 if __name__ == "__main__":
-    extract_data_and_update_ifc("C:/Users/ragre/OneDrive - Hochschule Luzern/DC_Scripting/Beispiel_IFC/Claridenstrasse 25, 8002 Zürich - Kopie.ifc", "test")
+    extract_data_and_update_ifc("C:/Users/ragre/OneDrive - Hochschule Luzern/DC_Scripting/Beispiel_IFC/105_LUF_BB12_GD - Kopie.ifc", "test3")
 
 
 
