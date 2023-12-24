@@ -12,3 +12,4 @@ Module die mit **pip** installier werden müssen
 - os
 - ttkthemes
 - sympy
+- tqdm
