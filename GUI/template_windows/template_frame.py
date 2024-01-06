@@ -106,7 +106,8 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
             if item_data and len(item_data) > 0:
                 template_name = item_data[0]  # Name des ausgewählten Templates
                 self.container.process_selected_template(template_name)
-                self.container.extract_data_and_update_ifc_callback(template_name)
+                self.container.file_saver_frame_callback()
+                
 
     def abbrechen_aktion(self):
         # Die Anwendung schließen

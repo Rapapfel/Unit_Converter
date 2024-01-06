@@ -7,10 +7,13 @@ from GUI.main_windows.unit_selector_frame import Unit_selector
 from GUI.template_windows.template_frame import BenutzerdefinierteVorlagen as bv
 from GUI.template_windows.neu_template_frame import Neu_template_frame as ntf
 from IFC_operation.template_handling import ifc_template_handler as ith
+from GUI.main_windows.file_saver_frame import IFC_File_Saver_frame as ifsf
+from GUI.status_windows.end_status_frame import end_status_frame as esf
 
 class Window(ctk.CTk):
     def __init__(self):
         super().__init__()
+        self.iconbitmap("Logo.ico")
         # Screen Size, Windows size and position
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
@@ -18,15 +21,15 @@ class Window(ctk.CTk):
         window_height = screen_height // 2
         x_position = (screen_width - window_width) // 2
         y_position = (screen_height - window_height) // 2
-        self.title("Einheitenaustausch")
+        self.title("Unit Converter")
         self.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
         self.current_frame = None
         self.parameter_dict = {}
 
         # File selector Frame
-        X = window_width - 60
-        Y = window_height
-        self.fsf = fsf(self,X,Y)
+        self.X = window_width - 60
+        self.Y = window_height
+        self.fsf = fsf(self,self.X,self.Y)
         self.frame_selection(self.fsf)
         print("Fertig")
 
@@ -74,11 +77,21 @@ class Window(ctk.CTk):
         self.frame_selection(bv(self))
     
     def process_selected_template (self,template_name):
-        print(template_name)
-        return template_name
+        print("template_name", template_name)
+        self.template_name = template_name
 
-    def extract_data_and_update_ifc_callback(self, template_name):
-        modules.extract_data_and_update_ifc(self.VAR_FILEPATH, template_name)
+    def file_saver_frame_callback (self):
+        self.frame_selection(ifsf(self, self.X, self.Y))
+    
+    def process_selected_save_file_path (self, selected_save_file_path):
+        print (selected_save_file_path)
+        self.selected_save_file_path = selected_save_file_path
+
+    def extract_data_and_update_ifc_callback(self):
+        modules.extract_data_and_update_ifc(self.VAR_FILEPATH, self.selected_save_file_path, self.template_name)
+
+    def end_status_frame_callback (self):
+        self.frame_selection(esf(self, self.X, self.Y))
 
     def abbrechen(self):
         self.destroy()

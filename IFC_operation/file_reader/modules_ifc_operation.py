@@ -148,7 +148,7 @@ def convert_value(value, source_unit_str, target_unit_str, decimal_places=2):
     rounded_value = round(float(numeric_value), decimal_places)
     return rounded_value
 
-def extract_data_and_update_ifc(VAR_FILEPATH, template_name):
+def extract_data_and_update_ifc(VAR_FILEPATH, selected_save_file_path, template_name):
 
     """
     Imports from the IFC-File (VAR_FILEPATH) all selected Psets (dict_selected_type) with the selected properties (dict_selected_properties).
@@ -213,7 +213,7 @@ def extract_data_and_update_ifc(VAR_FILEPATH, template_name):
 
 
     # Save the modified IFC file
-    ifc_file.write(VAR_FILEPATH.replace("Kopie", "Kopie1"))
+    ifc_file.write(selected_save_file_path)
 
                     
 if __name__ == "__main__":
