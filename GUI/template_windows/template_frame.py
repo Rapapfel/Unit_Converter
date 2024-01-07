@@ -30,7 +30,7 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.löschen_button = ctk.CTkButton(self.button_frame, text="Löschen", width=80, height=24, command=self.löschen_button_aktion)
         self.löschen_button.pack(side="left", padx=5)
 
-        self.import_button = ctk.CTkButton(self.button_frame, text="Import", width=80, height=24)
+        self.import_button = ctk.CTkButton(self.button_frame, text="Import", width=80, height=24, command=self.import_button_aktion)
         self.import_button.pack(side="left", padx=5)
 
         self.export_button = ctk.CTkButton(self.button_frame, text="Export", width=80, height=24, command=self.export_button_aktion)
@@ -106,6 +106,9 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
             if item_data:
                 template_name = item_data[0]
                 self.container.löschen_template_frame_callback(template_name)
+    
+    def import_button_aktion(self):
+        self.container.import_template_frame_callback()
 
     def export_button_aktion(self):
         selected_item = self.table.focus()

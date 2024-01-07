@@ -36,14 +36,12 @@ class DeleteTemplateConfirmation(ctk.CTkToplevel):
             # Fügen Sie hier Ihren Code zur tatsächlichen Löschung der Vorlage ein
             # Zum Beispiel: Löschung der Datei oder des Eintrags in einer Datenbank
             # Hier wird nur eine Meldung angezeigt und das Hauptfenster geschlossen
-            print(f"Vorlage '{self.template_name}' wurde gelöscht.")
             self.container.yes_löschen_template_callback(self.template_name)
             self.destroy()
 
         # Funktion zum Handhaben der "Nein"-Schaltfläche
         def no_action():
             # Fügen Sie hier Ihren Code für den Fall hinzu, dass "Nein" ausgewählt wurde
-            print(f"Löschung der Vorlage '{self.template_name}' abgebrochen.")
             self.destroy()
 
         # Button für "Ja"

@@ -11,7 +11,7 @@ class ExportTemplateWindow(ctk.CTkFrame):
 
         # Label zur Anzeige des ausgewählten Vorlagennamens
         self.label = ctk.CTkLabel(self, text=f"Wo möchten Sie die Vorlage '{self.template_name}' abspeichern?", text_color="white")
-        self.label.place(relx=0.5,rely=0.2, anchor=ctk.CENTER)
+        self.label.place(relx=0.5,rely=0.3, anchor=ctk.CENTER)
 
         # Button zur Auswahl des Speicherorts (links)
         self.choose_path_button = ctk.CTkButton(self, text="Speicherort", command=self.choose_path)
@@ -22,11 +22,11 @@ class ExportTemplateWindow(ctk.CTkFrame):
         self.dateipfad_eingabe.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
 
         # Buttons für Abbrechen, Speicherort und Speichern
-        self.cancel_button = ctk.CTkButton(self, text="Abbrechen", command=self.destroy)
-        self.cancel_button.place(relx=0.3, rely=0.65, anchor=ctk.CENTER)
+        self.cancel_button = ctk.CTkButton(self, text="Abbrechen", command=self.abbrechen_template)
+        self.cancel_button.place(relx=0.4, rely=0.6, anchor=ctk.CENTER)
 
         self.save_button = ctk.CTkButton(self, text="Speichern", command=self.save_template)
-        self.save_button.place(relx=0.7, rely=0.65, anchor=ctk.CENTER)
+        self.save_button.place(relx=0.6, rely=0.6, anchor=ctk.CENTER)
 
         self.selected_template_name = self.template_name
         self.selected_path = ""
@@ -43,13 +43,13 @@ class ExportTemplateWindow(ctk.CTkFrame):
         self.dateipfad_eingabe.configure(state='disabled')
 
     def save_template(self):
-        # Hier können Sie den ausgewählten Pfad und den ausgewählten Vorlagennamen verwenden, um die Vorlage zu speichern
         if self.selected_path:
-            # Speichern Sie die Vorlage an dem ausgewählten Pfad
-            # Fügen Sie Ihren Code zum Speichern der Vorlage hier ein
-            print(f"Vorlage '{self.selected_template_name}' wurde an {self.selected_path} gespeichert.")
-            self.destroy()
-
+            # Übergabe des Template-Namens und des Exportpfads an die Callback-Methode im Hauptfenster
+            self.container.process_export_template_frame(self.template_name, self.selected_path)
+    
+    def abbrechen_template(self):
+        self.container.export_template_abbrechen_callback()
+            
 if __name__ == "__main__":
     # Nehmen Sie an, dass Sie den ausgewählten Vorlagennamen bereits aus dem Hauptfenster haben
     selected_template_name = "Name der Vorlage"

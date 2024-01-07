@@ -9,6 +9,8 @@ from GUI.template_windows.neu_template_frame import Neu_template_frame as ntf
 from GUI.template_windows.bearbeiten_template_frame import bearbeiten_template_frame as btf
 from GUI.template_windows.löschen_template_frame import DeleteTemplateConfirmation as dtcf
 from GUI.template_windows.export_template_frame import ExportTemplateWindow as etw
+from GUI.status_windows.export_template_status_frame import export_template_status_frame as estf
+from GUI.template_windows.import_template_frame import ImportTemplateWindow as itw
 from IFC_operation.template_handling import ifc_template_handler as ith
 from GUI.main_windows.file_saver_frame import IFC_File_Saver_frame as ifsf
 from GUI.status_windows.end_status_frame import end_status_frame as esf
@@ -35,7 +37,6 @@ class Window(ctk.CTk):
         self.Y = window_height
         self.fsf = fsf(self,self.X,self.Y)
         self.frame_selection(self.fsf)
-        print("Fertig")
 
     def frame_selection(self, frame):
         if self.current_frame is not None:
@@ -48,7 +49,6 @@ class Window(ctk.CTk):
         if modules.is_ifc_file(VAR_FILEPATH):
             window_unit_status = usf(self, "diversen Einheiten")
             window_unit_status.mainloop()
-            print("Systemnachricht:\tDatei importiert")
             self.parameter_dict = modules.extract_pset_parameters(VAR_FILEPATH)  # Erstelle parameter_dict hier
             self.frame_selection(Unit_selector(self))
             self.VAR_FILEPATH = VAR_FILEPATH
@@ -56,7 +56,6 @@ class Window(ctk.CTk):
         else:
             window_import_status = fssf()
             window_import_status.mainloop()
-            print("Systemnachricht:\tFehlermeldung")
             return False
 
     def unit_selector_callback(self):
@@ -72,16 +71,8 @@ class Window(ctk.CTk):
     def abbrechen_template_callback(self):
         self.frame_selection(bv(self))
 
-    def erstellen_template_callback(self, name_template, bearbeitet_durch, beschreibung_template, selected_parameters):
-        
-        # Führen Sie hier den gewünschten Code aus, um die Parameter auszudrucken
-        print("Name des Templates:", name_template)
-        print("Zuletzt bearbeitet durch:", bearbeitet_durch)
-        print("Beschreibung des Templates:", beschreibung_template)
-        print("Ausgewählte Parameter für das Template:", selected_parameters)
-        
+    def erstellen_template_callback(self, name_template, bearbeitet_durch, beschreibung_template, selected_parameters):       
         ith.create_json_file(name_template, bearbeitet_durch, beschreibung_template, selected_parameters)
-
         self.frame_selection(bv(self))
     
     def ändern_template_callback(self, template_data):
@@ -110,6 +101,26 @@ class Window(ctk.CTk):
     
     def export_template_frame_callback(self, template_name):
         self.frame_selection(etw(self, self.X, self.Y, template_name))
+    
+    def process_export_template_frame(self, template_name, export_file_path):
+        ith.export_json_file(template_name, export_file_path)
+        estf(self, self)
+
+    def export_template_status_frame_callback(self):
+        self.frame_selection(bv(self))
+    
+    def export_template_abbrechen_callback(self):
+        self.frame_selection(bv(self))
+    
+    def import_template_frame_callback(self):
+        self.frame_selection(itw(self, self.X, self.Y))
+    
+    def process_import_template_frame(self, import_file_path):
+        ith.import_json_file(import_file_path)
+        self.frame_selection(bv(self))
+    
+    def import_template_abbrechen_callback(self):
+        self.frame_selection(bv(self))
 
     def process_selected_template (self,template_name):
         print("template_name", template_name)
