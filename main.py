@@ -3,7 +3,7 @@ from GUI.main_windows.file_selector_frame import file_selector_frame as fsf
 from IFC_operation.file_reader import modules_ifc_operation as modules
 from GUI.status_windows.file_selector_status_frame import file_selctor_status_frame as fssf
 from GUI.status_windows.unit_status_frame import unit_status_frame as usf
-from GUI.main_windows.unit_selector_frame import Unit_selector
+from GUI.main_windows.unit_selector_frame import Unit_selector as us
 from GUI.template_windows.template_frame import BenutzerdefinierteVorlagen as bv
 from GUI.template_windows.neu_template_frame import Neu_template_frame as ntf
 from GUI.template_windows.bearbeiten_template_frame import bearbeiten_template_frame as btf
@@ -50,7 +50,7 @@ class Window(ctk.CTk):
             window_unit_status = usf(self, "diversen Einheiten")
             window_unit_status.mainloop()
             self.parameter_dict = modules.extract_pset_parameters(VAR_FILEPATH)  # Erstelle parameter_dict hier
-            self.frame_selection(Unit_selector(self))
+            self.frame_selection(us(self, self.X, self.Y))
             self.VAR_FILEPATH = VAR_FILEPATH
             return True, VAR_FILEPATH
         else:

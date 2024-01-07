@@ -26,5 +26,21 @@ class end_status_frame(ctk.CTkFrame):
         self.quit()
 
 if __name__ == "__main__":
-    app = end_status_frame()
-    app.mainloop()
+    # Erstellen des Hauptfensters
+    root = ctk.CTk()
+
+    # Konfiguration der Fenstergröße und Position
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    window_width = screen_width // 2
+    window_height = screen_height // 2
+    x_position = (screen_width - window_width) // 2
+    y_position = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
+
+    # Instanziieren und Anzeigen des Frames
+    frame = end_status_frame(root, window_width - 60, window_height)
+    frame.pack(fill="both", expand=True)
+
+    # Starten des Event-Loops
+    root.mainloop()

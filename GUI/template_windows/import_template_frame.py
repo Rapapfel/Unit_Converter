@@ -49,6 +49,21 @@ class ImportTemplateWindow(ctk.CTkFrame):
 
 
 if __name__ == "__main__":
-    # Erstellen Sie das ImportTemplateWindow
-    import_window = ImportTemplateWindow()
-    import_window.mainloop()
+    # Erstellen eines Hauptfensters
+    root = ctk.CTk()
+
+    # Konfiguration der Fenstergröße und Position
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    window_width = screen_width // 2
+    window_height = screen_height // 2
+    x_position = (screen_width - window_width) // 2
+    y_position = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
+
+    # Instanziieren und Anzeigen des ImportTemplateWindow
+    import_window = ImportTemplateWindow(root, window_width, window_height)
+    import_window.pack(fill="both", expand=True)
+
+    # Starten des Event-Loops
+    root.mainloop()

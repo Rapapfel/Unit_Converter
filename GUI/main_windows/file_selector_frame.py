@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from tkinter import filedialog
-from tkinter import ttk
 
 class file_selector_frame(ctk.CTkFrame):
     def __init__(self, container, X, Y):
@@ -55,7 +54,21 @@ class file_selector_frame(ctk.CTkFrame):
         self.container.abbrechen()
 
 if __name__ == "__main__":
-    app = file_selector_frame()
-    app.mainloop()
+    # Erstellen des Hauptfensters
+    root = ctk.CTk()
 
-    selected_path = app.selected_file_path
+    # Konfiguration der Fenstergröße und Position
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    window_width = screen_width // 2
+    window_height = screen_height // 2
+    x_position = (screen_width - window_width) // 2
+    y_position = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
+
+    # Instanziieren und Anzeigen des Frames
+    frame = file_selector_frame(root, window_width - 60, window_height)
+    frame.pack(fill="both", expand=True)
+
+    # Starten des Event-Loops
+    root.mainloop()

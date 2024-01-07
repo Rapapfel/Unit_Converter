@@ -49,3 +49,24 @@ class IFC_File_Saver_frame(ctk.CTkFrame):
     def anwendung_schliessen(self):
         # Die Anwendung schließen
         self.destroy()
+
+    
+if __name__ == "__main__":
+    # Erstellen eines Hauptfensters
+    root = ctk.CTk()
+
+    # Konfiguration der Fenstergröße und Position
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    window_width = screen_width // 2
+    window_height = screen_height // 2
+    x_position = (screen_width - window_width) // 2
+    y_position = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
+
+    # Instanziieren und Anzeigen Ihres Frames
+    frame = IFC_File_Saver_frame(root, window_width - 60, window_height)
+    frame.pack(fill="both", expand=True)
+
+    # Starten des Event-Loops
+    root.mainloop()

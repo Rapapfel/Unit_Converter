@@ -206,16 +206,46 @@ class Neu_template_frame(ctk.CTkFrame):
 
 
 if __name__ == "__main__":
-    parameter_dict = {
-        'Pset MEP': ['Abkürzung', 'Berechneter Druckverlust (Pa)', 'Berechnete erforderliche Drosselung (Pa)', 'Calc-Volumetric flow (m3/h)'],
-        'Pset_SlabCommon': ['IstExtern', 'Wärmedurchgangskoeffizient'],
-        'Pset nova - Archi': ['Name']
+    root = ctk.CTk()
+
+    # Konfiguration der Fenstergröße und Position
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    window_width = screen_width // 2
+    window_height = screen_height // 2
+    x_position = (screen_width - window_width) // 2
+    y_position = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
+
+    # Beispieldaten für die Initialisierung Ihrer Klasse
+    template_data = {
+        "template_name": "test_2",
+        "last_modified": "2023-12-18 20:31:28",
+        "modified_by": "adsf",
+        "description": "asdf",
+        "parameters": {
+            "Pset MEP — Calc-Pressure loss (Pa) — Druck": {
+                "source_unit": "bar",
+                "target_unit": "pascal"
+            },
+            "Pset MEP — Calc-Volumetric flow (m3/h) — Volumenstrom": {
+                "source_unit": "meter**3/hour",
+                "target_unit": "meter**3/second"
+            },
+            "Pset MEP — Tech-Weight (kg) — Masse": {
+                "source_unit": "gram",
+                "target_unit": "kilogram"
+            }
+        }
     }
 
-    root = tk.Tk()
-    root.title("Hauptfenster")
+    parameter_dict = {
+        # Ihre Parameterdaten...
+    }
+    
+    # Instanziieren und Anzeigen Ihres Frames
+    frame = Neu_template_frame(root, template_data, parameter_dict)
+    frame.pack(fill="both", expand=True)
 
-    app = Neu_template_frame(root, parameter_dict)
-    app.pack(fill="both", expand=True)
-
+    # Starten des Event-Loops
     root.mainloop()

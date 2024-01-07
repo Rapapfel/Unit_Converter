@@ -53,9 +53,16 @@ class DeleteTemplateConfirmation(ctk.CTkToplevel):
         no_button.place(relx=0.3, rely=0.8, anchor=ctk.CENTER)
 
 if __name__ == "__main__":
-    # Nehmen Sie an, dass Sie den Namen der Vorlage haben, z.B., "Name der Vorlage"
+    # Erstellen eines Hauptfensters
+    root = ctk.CTk()
+    root.geometry("800x600")  # Beispielgröße
+
+    # Nehmen Sie an, dass Sie den Namen der Vorlage haben, z.B. "Name der Vorlage"
     template_name = "Name der Vorlage"
-    
+
+    # Container könnte das Hauptfenster oder ein anderes Element sein, das die Callbacks definiert
+    container = root  # In diesem Beispiel wird das Hauptfenster als Container verwendet
+
     # Erstellen Sie das DeleteTemplateConfirmation-Fenster und übergeben Sie den Vorlagennamen
-    delete_confirmation_window = DeleteTemplateConfirmation(template_name)
+    delete_confirmation_window = DeleteTemplateConfirmation(root, template_name, container)
     delete_confirmation_window.mainloop()

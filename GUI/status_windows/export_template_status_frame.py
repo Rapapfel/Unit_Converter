@@ -38,5 +38,13 @@ class export_template_status_frame(ctk.CTkToplevel):
         self.destroy()
 
 if __name__ == "__main__":
-    app = export_template_status_frame()
-    app.mainloop()
+    # Erstellen eines Hauptfensters
+    root = ctk.CTk()
+    root.geometry("800x600")  # Beispielgröße
+
+    # Container könnte das Hauptfenster oder ein anderes Element sein, das die Callbacks definiert
+    container = root  # In diesem Beispiel wird das Hauptfenster als Container verwendet
+
+    # Erstellen Sie das export_template_status_frame Fenster
+    status_frame = export_template_status_frame(container, root)
+    status_frame.mainloop()

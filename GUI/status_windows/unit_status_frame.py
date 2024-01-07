@@ -39,6 +39,13 @@ class unit_status_frame(ctk.CTkToplevel):
         
 
 if __name__ == "__main__":
-    # Erstellen und Anzeigen des Fensters mit der Nachricht über SI-Einheiten
-    app = unit_status_frame("SI")
-    app.mainloop()
+    # Erstellen eines Hauptfensters
+    root = ctk.CTk()
+    root.geometry("800x600")  # Beispielgröße
+
+    # Einheitswert, den Sie anzeigen möchten, z.B. "SI"
+    einheit = "SI"
+
+    # Erstellen und Anzeigen des unit_status_frame Fensters
+    status_frame = unit_status_frame(root, einheit)
+    status_frame.mainloop()

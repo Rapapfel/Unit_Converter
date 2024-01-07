@@ -22,5 +22,10 @@ class file_selctor_status_frame(ctk.CTkToplevel):
         self.destroy()
 
 if __name__ == "__main__":
-    app = file_selctor_status_frame()
-    app.mainloop()
+    # Erstellen eines Hauptfensters
+    root = ctk.CTk()
+    root.geometry("800x600")  # Beispielgröße
+
+    # Erstellen und Anzeigen des file_selector_status_frame Fensters
+    status_frame = file_selctor_status_frame()
+    status_frame.mainloop()

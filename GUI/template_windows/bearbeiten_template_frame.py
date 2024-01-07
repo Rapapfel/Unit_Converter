@@ -242,6 +242,19 @@ class bearbeiten_template_frame(ctk.CTkFrame):
 
 
 if __name__ == "__main__":
+
+    root = ctk.CTk()
+
+    # Konfiguration der Fenstergröße und Position
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    window_width = screen_width // 2
+    window_height = screen_height // 2
+    x_position = (screen_width - window_width) // 2
+    y_position = (screen_height - window_height) // 2
+    root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
+
+    # Beispieldaten für die Initialisierung Ihrer Klasse
     template_data = {
     "template_name": "test_2",
     "last_modified": "2023-12-18 20:31:28",
@@ -259,14 +272,15 @@ if __name__ == "__main__":
         "Pset MEP — Tech-Weight (kg) — Masse": {
             "source_unit": "gram",
             "target_unit": "kilogram"
+            }
         }
     }
-}
 
-    root = tk.Tk()
-    root.title("Hauptfenster")
     parameter_dict = {'Pset MEP': ['Abbreviation', 'Calc-Pressure loss (Pa)', 'Calc-Required throttling (Pa)', 'Calc-Volumetric flow (m3/h)', 'Calc-Zeta', 'Geom-Additional length (mm)', 'Geom-Angle (°)', 'Geom-Branch length (mm)', 'Geom-Connection length (mm)', 'Geom-Connection Ø (mm)', 'Geom-DN', 'Geom-DN1', 'Geom-DN2', 'Geom-DN3', 'Geom-Half length (mm)', 'Geom-Head Ø (mm)', 'Geom-Housing length (mm)', 'Geom-Housing Ø (mm)', 'Geom-Length (mm)', 'Geom-Length 1 (mm)', 'Geom-Length 2 (mm)', 'Geom-Length branch (mm)', 'Geom-Length outlet (mm)', 'Geom-Main side (mm)', 'Geom-Offnet (mm)', 'Geom-Offset (mm)', 'Geom-Offset 1 (mm)', 'Geom-Offset 2 (mm)', 'Geom-Offset to edge 1 (mm)', 'Geom-Offset to edge 2 (mm)', 'Geom-Outer Ø (mm)', 'Geom-Outer Ø1 (mm)', 'Geom-Outer Ø2 (mm)', 'Geom-Outer Ø3 (mm)', 'Geom-Radius (mm)', 'Geom-Secondary side 1 (mm)', 'Geom-Secondary side 2 (mm)', 'Geom-Section 1 side 1 (mm)', 'Geom-Section 1 side 2 (mm)', 'Geom-Section 2 side 1 (mm)', 'Geom-Section 2 side 2 (mm)', 'Geom-Segment number (if segmented)', 'Geom-Side 1 (mm)', 'Geom-Side 2 (mm)', 'Geom-Spacing between branches (mm)', 'Geom-Spacing to branch (mm)', 'Geom-Surface (m2)', 'Geom-Tenon (mm)', 'Geom-Thickness (mm)', 'Geom-Thickness(mm)', 'Geom-Ø (mm)', 'Geom-Ø branch  (mm)', 'Geom-Ø main (mm)', 'Geom-Ø secondary (mm)', 'Info', 'Name', 'Tech-Insulation surface (m2)', 'Tech-Insulation thickness (mm)', 'Tech-Material', 'Tech-Material (ID)', 'Tech-Medium', 'Tech-Weight (kg)'], 'Pset_SlabCommon': ['IsExternal', 'ThermalTransmittance'], 'Pset nova - Archi': ['Name']}
-    app = bearbeiten_template_frame(root, template_data, parameter_dict)
-    app.pack(fill="both", expand=True)
+    
+    # Instanziieren und Anzeigen Ihres Frames
+    frame = bearbeiten_template_frame(root, template_data, parameter_dict)
+    frame.pack(fill="both", expand=True)
 
+    # Starten des Event-Loops
     root.mainloop()
