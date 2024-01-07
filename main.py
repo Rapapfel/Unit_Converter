@@ -6,6 +6,9 @@ from GUI.status_windows.unit_status_frame import unit_status_frame as usf
 from GUI.main_windows.unit_selector_frame import Unit_selector
 from GUI.template_windows.template_frame import BenutzerdefinierteVorlagen as bv
 from GUI.template_windows.neu_template_frame import Neu_template_frame as ntf
+from GUI.template_windows.bearbeiten_template_frame import bearbeiten_template_frame as btf
+from GUI.template_windows.löschen_template_frame import DeleteTemplateConfirmation as dtcf
+from GUI.template_windows.export_template_frame import ExportTemplateWindow as etw
 from IFC_operation.template_handling import ifc_template_handler as ith
 from GUI.main_windows.file_saver_frame import IFC_File_Saver_frame as ifsf
 from GUI.status_windows.end_status_frame import end_status_frame as esf
@@ -25,6 +28,7 @@ class Window(ctk.CTk):
         self.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
         self.current_frame = None
         self.parameter_dict = {}
+        self.template_name = None
 
         # File selector Frame
         self.X = window_width - 60
@@ -60,6 +64,10 @@ class Window(ctk.CTk):
 
     def neu_template_frame_callback(self):
         self.frame_selection(ntf(self, self.parameter_dict))
+    
+    def bearbeiten_template_frame_callback(self,template_data):
+        bearbeiten_frame = btf(self, template_data, self.parameter_dict)
+        self.frame_selection(bearbeiten_frame)
 
     def abbrechen_template_callback(self):
         self.frame_selection(bv(self))
@@ -76,6 +84,33 @@ class Window(ctk.CTk):
 
         self.frame_selection(bv(self))
     
+    def ändern_template_callback(self, template_data):
+        # Extrahieren Sie die benötigten Daten aus template_data
+        template_name_old = self.template_name  # Der Name des zu ändernden Templates
+        template_name_new = template_data["template_name_new"]
+        modified_by = template_data["modified_by"]
+        description = template_data["description"]
+        parameters = template_data["parameters"]
+
+        # Rufen Sie die Methode zum Überschreiben der JSON-Datei auf
+        ith.overwrite_json_file(template_name_old, template_name_new, modified_by, description, parameters)
+
+        # Wechseln Sie zurück zur Template-Übersicht
+        self.frame_selection(bv(self))
+
+    def set_current_template_name(self, template_name):
+        self.template_name = template_name
+    
+    def löschen_template_frame_callback(self, template_name):
+        dtcf(self, template_name, self)
+    
+    def yes_löschen_template_callback(self, template_name):
+        ith.remove_json_file(template_name)
+        self.frame_selection(bv(self))
+    
+    def export_template_frame_callback(self, template_name):
+        self.frame_selection(etw(self, self.X, self.Y, template_name))
+
     def process_selected_template (self,template_name):
         print("template_name", template_name)
         self.template_name = template_name

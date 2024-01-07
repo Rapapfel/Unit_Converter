@@ -1,14 +1,33 @@
-import tkinter as tk
 import customtkinter as ctk
 
-class DeleteTemplateConfirmation(ctk.CTk):
-    def __init__(self, template_name):
+class DeleteTemplateConfirmation(ctk.CTkToplevel):
+    def __init__(self, root, template_name,container):
         super().__init__()
         self.title("Vorlage löschen")
         self.geometry("450x150")
+        self.attributes("-topmost",True)
+        self.container = container
 
+        self.template_name = template_name
+        self.root = root
+        self.widgets_erstellen()
+        self.fenster_zentrieren()
+
+
+    def fenster_zentrieren(self):
+        root_x = self.master.winfo_x()
+        root_y = self.master.winfo_y()
+        root_width = self.master.winfo_width()
+        root_height = self.master.winfo_height()
+
+        x_position = root_x + (root_width - 400) // 2
+        y_position = root_y + (root_height - 200) // 2
+
+        self.geometry(f"+{x_position}+{y_position}")
+    
+    def widgets_erstellen(self):
         # Meldungstext mit dem übergebenen Vorlagennamen
-        message_text = f"Soll die Vorlage '{template_name}' gelöscht werden?"
+        message_text = f"Soll die Vorlage '{self.template_name}' gelöscht werden?"
         message_label = ctk.CTkLabel(self, text=message_text)
         message_label.pack(pady=20)
 
@@ -17,13 +36,14 @@ class DeleteTemplateConfirmation(ctk.CTk):
             # Fügen Sie hier Ihren Code zur tatsächlichen Löschung der Vorlage ein
             # Zum Beispiel: Löschung der Datei oder des Eintrags in einer Datenbank
             # Hier wird nur eine Meldung angezeigt und das Hauptfenster geschlossen
-            print(f"Vorlage '{template_name}' wurde gelöscht.")
+            print(f"Vorlage '{self.template_name}' wurde gelöscht.")
+            self.container.yes_löschen_template_callback(self.template_name)
             self.destroy()
 
         # Funktion zum Handhaben der "Nein"-Schaltfläche
         def no_action():
             # Fügen Sie hier Ihren Code für den Fall hinzu, dass "Nein" ausgewählt wurde
-            print(f"Löschung der Vorlage '{template_name}' abgebrochen.")
+            print(f"Löschung der Vorlage '{self.template_name}' abgebrochen.")
             self.destroy()
 
         # Button für "Ja"

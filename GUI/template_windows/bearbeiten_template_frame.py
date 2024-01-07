@@ -4,15 +4,19 @@ import customtkinter as ctk
 import os
 import json
 
-class Neu_template_frame(ctk.CTkFrame):
-    def __init__(self, container, parameter_dict, name_template="", bearbeitet_durch="", beschreibung_template=""):
+class bearbeiten_template_frame(ctk.CTkFrame):
+    def __init__(self, container, template_data, parameter_dict):
         self.fg_color = "#242424"
         super().__init__(container, width=1500, height=600, fg_color=self.fg_color)
         self.container = container
         self.parameter_dict = parameter_dict
-        self.name_template = name_template
-        self.bearbeitet_durch = bearbeitet_durch
-        self.beschreibung_template = beschreibung_template
+        self.template_parameter_dict = template_data.get("parameters", {})
+        
+        # Vorbefüllen der allgemeinen Template-Informationen
+        self.name_template = template_data.get("template_name", "")
+        self.bearbeitet_durch = template_data.get("modified_by", "")
+        self.beschreibung_template = template_data.get("description", "")
+        
 
         # Laden der Einheiten aus der JSON-Datei
         current_script = os.path.dirname(os.path.realpath(__file__))
@@ -49,9 +53,9 @@ class Neu_template_frame(ctk.CTkFrame):
         self.cancel_button = ctk.CTkButton(self, text="Abbrechen", command=self.abbrechen_aktion)
         self.cancel_button.place(relx=0.25, rely=0.85, anchor=ctk.CENTER)
 
-        # Button "Template erstellen" zum Hinzufügen
-        self.erstellen_button = ctk.CTkButton(self, text="Template erstellen", command=self.erstellen_aktion)
-        self.erstellen_button.place(relx=0.75, rely=0.85, anchor=ctk.CENTER)
+        # Button "Template ändern" zum Ändern
+        self.ändern_button = ctk.CTkButton(self, text="Template ändern", command=self.ändern_aktion)
+        self.ändern_button.place(relx=0.75, rely=0.85, anchor=ctk.CENTER)
 
          # Zusätzliche Eingabefelder für Template-Informationen
         self.name_template_entry = tk.Entry(self, background=self.fg_color, foreground="white")
@@ -63,7 +67,29 @@ class Neu_template_frame(ctk.CTkFrame):
 
         self.add_info_entries()
 
-        self.add_row()
+        if len(self.template_parameter_dict.items()) == 0:
+            self.add_row()
+
+        # Füllen Sie die Eingabefelder mit den Daten
+        self.name_template_entry.insert(0, self.name_template)
+        self.bearbeitet_durch_entry.insert(0, self.bearbeitet_durch)
+        self.beschreibung_template_entry.insert(0, self.beschreibung_template)
+
+        # Vorbelegen der Parameterzeilen
+        self.initialize_parameters()
+
+    
+    def initialize_parameters(self):
+        for param_key, param_values in self.template_parameter_dict.items():
+            # Zerlege den zusammengesetzten Schlüssel
+            pset_name, param_name, category_name = param_key.split(' — ')
+            full_param_info = {
+                "pset_name": pset_name,
+                "param_name": param_name,
+                "category_name": category_name,
+                **param_values
+            }
+            self.add_row(full_param_info)
 
     def add_column_titles(self):
         titles = ["Pset", "Parameter", "Einheitenkategorie", "Quelleinheit", "Zieleinheit", ""]
@@ -80,14 +106,13 @@ class Neu_template_frame(ctk.CTkFrame):
             label = ctk.CTkLabel(self, text=label_text, fg_color=self.fg_color)
             label.place(relx=0.1, rely=0.1 + i * 0.05, anchor=ctk.W)
 
-    def add_row(self):
-        if not self.rows or all(self.is_row_complete(row) for row in self.rows):
-            row_index = len(self.rows) + 1
-            widgets = self.create_row_widgets(row_index)
-            self.rows.append(widgets)
-            self.update_scrollregion()
+    def add_row(self, param_info=None):
+        row_index = len(self.rows) + 1
+        widgets = self.create_row_widgets(row_index, param_info)
+        self.rows.append(widgets)
+        self.update_scrollregion()
 
-    def create_row_widgets(self, row_index):
+    def create_row_widgets(self, row_index, param_info=None):
         widgets = []
 
         pset_var = tk.StringVar()
@@ -123,6 +148,20 @@ class Neu_template_frame(ctk.CTkFrame):
         param_dropdown.bind("<<ComboboxSelected>>", lambda event: self.update_param_dropdown(source_unit_dropdown, target_unit_dropdown, category_dropdown))
         category_dropdown.bind("<<ComboboxSelected>>", lambda event, source_unit_dropdown=source_unit_dropdown, target_unit_dropdown=target_unit_dropdown: self.update_unit_dropdowns(category_dropdown, source_unit_dropdown, target_unit_dropdown))
 
+        
+        pset_dropdown["text"]=""
+        param_dropdown["text"]=""
+        category_dropdown["text"]=""
+        source_unit_dropdown["text"]=""
+        target_unit_dropdown["text"]=""
+        if param_info:
+            pset_dropdown.set(param_info.get("pset_name", ""))
+            self.update_pset_dropdown(pset_dropdown, param_dropdown, source_unit_dropdown, target_unit_dropdown, category_dropdown)
+            param_dropdown.set(param_info.get("param_name", ""))
+            category_dropdown.set(param_info.get("category_name", ""))
+            self.update_unit_dropdowns(category_dropdown, source_unit_dropdown, target_unit_dropdown)
+            source_unit_dropdown.set(param_info.get("source_unit", ""))
+            target_unit_dropdown.set(param_info.get("target_unit", ""))
         return widgets
 
     def update_scrollregion(self):
@@ -178,26 +217,23 @@ class Neu_template_frame(ctk.CTkFrame):
                         "source_unit": source_unit_name,
                         "target_unit": target_unit_name
                     }
-            print(selected_parameters)
             return selected_parameters
 
-    def erstellen_aktion(self):
-        if self.erstellen_button:
-            name_template = self.name_template_entry.get()
+    def ändern_aktion(self):
+        if self.ändern_button:
+            name_template_neu = self.name_template_entry.get()
             bearbeitet_durch = self.bearbeitet_durch_entry.get()
             beschreibung_template = self.beschreibung_template_entry.get()
             selected_parameters = self.transform_selected_parameters_to_dict()
 
-            # Hier wird die Methode erstellen_template_callback aus main.py aufgerufen
-            self.container.erstellen_template_callback(name_template, bearbeitet_durch, beschreibung_template, selected_parameters)
-            
-            if __name__ == "__main__":
-                print("Name des Templates:", name_template)
-                print("Zuletzt bearbeitet durch:", bearbeitet_durch)
-                print("Beschreibung des Templates:", beschreibung_template)
-                print("Ausgewählte Parameter für das Template:", selected_parameters)
-            
-            return name_template, bearbeitet_durch, beschreibung_template, selected_parameters
+            template_data = {
+                "template_name_new": name_template_neu,
+                "modified_by": bearbeitet_durch,
+                "description": beschreibung_template,
+                "parameters": selected_parameters
+            }
+
+            self.container.ändern_template_callback(template_data)
 
     def abbrechen_aktion(self):
         if self.abbrechen_aktion:
@@ -206,16 +242,31 @@ class Neu_template_frame(ctk.CTkFrame):
 
 
 if __name__ == "__main__":
-    parameter_dict = {
-        'Pset MEP': ['Abkürzung', 'Berechneter Druckverlust (Pa)', 'Berechnete erforderliche Drosselung (Pa)', 'Calc-Volumetric flow (m3/h)'],
-        'Pset_SlabCommon': ['IstExtern', 'Wärmedurchgangskoeffizient'],
-        'Pset nova - Archi': ['Name']
+    template_data = {
+    "template_name": "test_2",
+    "last_modified": "2023-12-18 20:31:28",
+    "modified_by": "adsf",
+    "description": "asdf",
+    "parameters": {
+        "Pset MEP — Calc-Pressure loss (Pa) — Druck": {
+            "source_unit": "bar",
+            "target_unit": "pascal"
+        },
+        "Pset MEP — Calc-Volumetric flow (m3/h) — Volumenstrom": {
+            "source_unit": "meter**3/hour",
+            "target_unit": "meter**3/second"
+        },
+        "Pset MEP — Tech-Weight (kg) — Masse": {
+            "source_unit": "gram",
+            "target_unit": "kilogram"
+        }
     }
+}
 
     root = tk.Tk()
     root.title("Hauptfenster")
-
-    app = Neu_template_frame(root, parameter_dict)
+    parameter_dict = {'Pset MEP': ['Abbreviation', 'Calc-Pressure loss (Pa)', 'Calc-Required throttling (Pa)', 'Calc-Volumetric flow (m3/h)', 'Calc-Zeta', 'Geom-Additional length (mm)', 'Geom-Angle (°)', 'Geom-Branch length (mm)', 'Geom-Connection length (mm)', 'Geom-Connection Ø (mm)', 'Geom-DN', 'Geom-DN1', 'Geom-DN2', 'Geom-DN3', 'Geom-Half length (mm)', 'Geom-Head Ø (mm)', 'Geom-Housing length (mm)', 'Geom-Housing Ø (mm)', 'Geom-Length (mm)', 'Geom-Length 1 (mm)', 'Geom-Length 2 (mm)', 'Geom-Length branch (mm)', 'Geom-Length outlet (mm)', 'Geom-Main side (mm)', 'Geom-Offnet (mm)', 'Geom-Offset (mm)', 'Geom-Offset 1 (mm)', 'Geom-Offset 2 (mm)', 'Geom-Offset to edge 1 (mm)', 'Geom-Offset to edge 2 (mm)', 'Geom-Outer Ø (mm)', 'Geom-Outer Ø1 (mm)', 'Geom-Outer Ø2 (mm)', 'Geom-Outer Ø3 (mm)', 'Geom-Radius (mm)', 'Geom-Secondary side 1 (mm)', 'Geom-Secondary side 2 (mm)', 'Geom-Section 1 side 1 (mm)', 'Geom-Section 1 side 2 (mm)', 'Geom-Section 2 side 1 (mm)', 'Geom-Section 2 side 2 (mm)', 'Geom-Segment number (if segmented)', 'Geom-Side 1 (mm)', 'Geom-Side 2 (mm)', 'Geom-Spacing between branches (mm)', 'Geom-Spacing to branch (mm)', 'Geom-Surface (m2)', 'Geom-Tenon (mm)', 'Geom-Thickness (mm)', 'Geom-Thickness(mm)', 'Geom-Ø (mm)', 'Geom-Ø branch  (mm)', 'Geom-Ø main (mm)', 'Geom-Ø secondary (mm)', 'Info', 'Name', 'Tech-Insulation surface (m2)', 'Tech-Insulation thickness (mm)', 'Tech-Material', 'Tech-Material (ID)', 'Tech-Medium', 'Tech-Weight (kg)'], 'Pset_SlabCommon': ['IsExternal', 'ThermalTransmittance'], 'Pset nova - Archi': ['Name']}
+    app = bearbeiten_template_frame(root, template_data, parameter_dict)
     app.pack(fill="both", expand=True)
 
     root.mainloop()

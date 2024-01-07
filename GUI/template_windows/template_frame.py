@@ -24,16 +24,16 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.neu_button = ctk.CTkButton(self.button_frame, text="Neu", width=80, height=24, command=self.neu_button_aktion)
         self.neu_button.pack(side="left", padx=5, pady=5)
 
-        self.bearbeiten_button = ctk.CTkButton(self.button_frame, text="Bearbeiten", width=80, height=24)
+        self.bearbeiten_button = ctk.CTkButton(self.button_frame, text="Bearbeiten", width=80, height=24, command=self.bearbeiten_button_aktion)
         self.bearbeiten_button.pack(side="left", padx=5)
 
-        self.löschen_button = ctk.CTkButton(self.button_frame, text="Löschen", width=80, height=24)
+        self.löschen_button = ctk.CTkButton(self.button_frame, text="Löschen", width=80, height=24, command=self.löschen_button_aktion)
         self.löschen_button.pack(side="left", padx=5)
 
         self.import_button = ctk.CTkButton(self.button_frame, text="Import", width=80, height=24)
         self.import_button.pack(side="left", padx=5)
 
-        self.export_button = ctk.CTkButton(self.button_frame, text="Export", width=80, height=24)
+        self.export_button = ctk.CTkButton(self.button_frame, text="Export", width=80, height=24, command=self.export_button_aktion)
         self.export_button.pack(side="left", padx=5)
 
         # Rahmen um die Tabelle
@@ -98,6 +98,34 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
     def neu_button_aktion(self):
         if self.neu_button:
             self.container.neu_template_frame_callback()
+    
+    def löschen_button_aktion(self):
+        selected_item = self.table.focus()
+        if selected_item:
+            item_data = self.table.item(selected_item, "values")
+            if item_data:
+                template_name = item_data[0]
+                self.container.löschen_template_frame_callback(template_name)
+
+    def export_button_aktion(self):
+        selected_item = self.table.focus()
+        if selected_item:
+            item_data = self.table.item(selected_item, "values")
+            if item_data:
+                template_name = item_data[0]
+                self.container.export_template_frame_callback(template_name)
+        
+    def bearbeiten_button_aktion(self):
+        selected_item = self.table.focus()
+        if selected_item:
+            item_data = self.table.item(selected_item, "values")
+            if item_data:
+                template_name = item_data[0]
+                self.container.set_current_template_name(template_name)  # Neu hinzugefügt
+                file_path = os.path.join(self.templates_dir, f"{template_name}.json")
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    template_data = json.load(file)
+                self.container.bearbeiten_template_frame_callback(template_data)
 
     def weiter_button_aktion(self):
         selected_item = self.table.focus()  # ID des ausgewählten Elements erhalten
