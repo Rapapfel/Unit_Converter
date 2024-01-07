@@ -22,8 +22,8 @@ class Window(ctk.CTk):
         # Screen Size, Windows size and position
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
-        window_width = screen_width // 2
-        window_height = screen_height // 2
+        window_width = (3 * screen_width) // 4
+        window_height = (2 * screen_height) // 3
         x_position = (screen_width - window_width) // 2
         y_position = (screen_height - window_height) // 2
         self.title("Unit Converter")
@@ -33,7 +33,7 @@ class Window(ctk.CTk):
         self.template_name = None
 
         # File selector Frame
-        self.X = window_width - 60
+        self.X = window_width - 10
         self.Y = window_height
         self.fsf = fsf(self,self.X,self.Y)
         self.frame_selection(self.fsf)
@@ -59,21 +59,21 @@ class Window(ctk.CTk):
             return False
 
     def unit_selector_callback(self):
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
 
     def neu_template_frame_callback(self):
-        self.frame_selection(ntf(self, self.parameter_dict))
+        self.frame_selection(ntf(self, self.X, self.Y, self.parameter_dict))
     
     def bearbeiten_template_frame_callback(self,template_data):
-        bearbeiten_frame = btf(self, template_data, self.parameter_dict)
+        bearbeiten_frame = btf(self, self.X, self.Y, template_data, self.parameter_dict)
         self.frame_selection(bearbeiten_frame)
 
     def abbrechen_template_callback(self):
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
 
     def erstellen_template_callback(self, name_template, bearbeitet_durch, beschreibung_template, selected_parameters):       
         ith.create_json_file(name_template, bearbeitet_durch, beschreibung_template, selected_parameters)
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
     
     def ändern_template_callback(self, template_data):
         # Extrahieren Sie die benötigten Daten aus template_data
@@ -87,7 +87,7 @@ class Window(ctk.CTk):
         ith.overwrite_json_file(template_name_old, template_name_new, modified_by, description, parameters)
 
         # Wechseln Sie zurück zur Template-Übersicht
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
 
     def set_current_template_name(self, template_name):
         self.template_name = template_name
@@ -97,7 +97,7 @@ class Window(ctk.CTk):
     
     def yes_löschen_template_callback(self, template_name):
         ith.remove_json_file(template_name)
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
     
     def export_template_frame_callback(self, template_name):
         self.frame_selection(etw(self, self.X, self.Y, template_name))
@@ -107,20 +107,20 @@ class Window(ctk.CTk):
         estf(self, self)
 
     def export_template_status_frame_callback(self):
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
     
     def export_template_abbrechen_callback(self):
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
     
     def import_template_frame_callback(self):
         self.frame_selection(itw(self, self.X, self.Y))
     
     def process_import_template_frame(self, import_file_path):
         ith.import_json_file(import_file_path)
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
     
     def import_template_abbrechen_callback(self):
-        self.frame_selection(bv(self))
+        self.frame_selection(bv(self, self.X, self.Y))
 
     def process_selected_template (self,template_name):
         print("template_name", template_name)

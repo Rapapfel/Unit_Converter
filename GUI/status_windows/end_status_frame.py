@@ -32,8 +32,8 @@ if __name__ == "__main__":
     # Konfiguration der Fenstergröße und Position
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    window_width = screen_width // 2
-    window_height = screen_height // 2
+    window_width = (3 * screen_width) // 4
+    window_height = (2 * screen_height) // 3
     x_position = (screen_width - window_width) // 2
     y_position = (screen_height - window_height) // 2
     root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")

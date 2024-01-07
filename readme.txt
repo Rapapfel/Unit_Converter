@@ -3,13 +3,10 @@ Python Version
     ifcopenshell hat probleme mit 3.12
 
 Module die mit **pip** installier werden müssen
-- ifcopenshell
-- prettytable
-- packaging
-- customtkinter
-- tkinter
-- json
-- os
-- ttkthemes
-- sympy
-- tqdm
+- ifcopenshell (Umgang mit IFC-Dateien)
+- customtkinter (Moderne Benutzeroberfläche)
+- tkinter (Standard Benutzeroberfläche)
+- json (Umgang mit JSON-Dateien)
+- os (Arbeiten im Dateisystem)
+- sympy (symbolische Mathematik und physikalische Einheiten)
+- tqdm (Fortschrittsanzeige in Schleifen)

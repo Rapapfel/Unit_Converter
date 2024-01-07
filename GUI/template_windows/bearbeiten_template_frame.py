@@ -5,12 +5,15 @@ import os
 import json
 
 class bearbeiten_template_frame(ctk.CTkFrame):
-    def __init__(self, container, template_data, parameter_dict):
+    def __init__(self, container, X, Y, template_data, parameter_dict):
         self.fg_color = "#242424"
-        super().__init__(container, width=1500, height=600, fg_color=self.fg_color)
+        super().__init__(container, width=X, height=Y, fg_color=self.fg_color)
         self.container = container
         self.parameter_dict = parameter_dict
         self.template_parameter_dict = template_data.get("parameters", {})
+        self.font_size = ("Arial", 18)
+        self.option_add('*TCombobox*Font', ('Arial', 15))
+
         
         # Vorbefüllen der allgemeinen Template-Informationen
         self.name_template = template_data.get("template_name", "")
@@ -30,7 +33,7 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         style.map("TCombobox", fieldbackground=[("readonly", self.fg_color)], selectbackground=[("readonly", self.fg_color)], selectforeground=[("readonly", "white")])
 
         self.container_frame = ctk.CTkFrame(self, fg_color=self.fg_color)
-        self.container_frame.place(relx=0.1, rely=0.5, relwidth=0.8, relheight=0.4, anchor=ctk.W)
+        self.container_frame.place(relx=0.1, rely=0.5, relwidth=0.9, relheight=0.4, anchor=ctk.W)
 
         self.canvas = tk.Canvas(self.container_frame, bg=self.fg_color, highlightthickness=0)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
@@ -58,11 +61,11 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         self.ändern_button.place(relx=0.75, rely=0.85, anchor=ctk.CENTER)
 
          # Zusätzliche Eingabefelder für Template-Informationen
-        self.name_template_entry = tk.Entry(self, background=self.fg_color, foreground="white")
+        self.name_template_entry = tk.Entry(self, background=self.fg_color, foreground="white", font=self.font_size)
         self.name_template_entry.place(relx=0.3, rely=0.1, relwidth=0.6)
-        self.bearbeitet_durch_entry = tk.Entry(self, background=self.fg_color, foreground="white")
+        self.bearbeitet_durch_entry = tk.Entry(self, background=self.fg_color, foreground="white", font=self.font_size)
         self.bearbeitet_durch_entry.place(relx=0.3, rely=0.15, relwidth=0.6)
-        self.beschreibung_template_entry = tk.Entry(self, background=self.fg_color, foreground="white")
+        self.beschreibung_template_entry = tk.Entry(self, background=self.fg_color, foreground="white", font=self.font_size)
         self.beschreibung_template_entry.place(relx=0.3, rely=0.2, relwidth=0.6)
 
         self.add_info_entries()
@@ -93,12 +96,14 @@ class bearbeiten_template_frame(ctk.CTkFrame):
 
     def add_column_titles(self):
         titles = ["Pset", "Parameter", "Einheitenkategorie", "Quelleinheit", "Zieleinheit", ""]
-        column_widths = [100, 220, 150, 300, 300, 40]  # Define column widths
+        column_widths = [100, 220, 150, 200, 200, 20]  # Define column widths
+        row_height = 30  # Beispielhöhe, kann angepasst werden
         for i, (title, width) in enumerate(zip(titles, column_widths)):
-            label = ctk.CTkLabel(self.grid_frame, text=title, fg_color=self.fg_color, width=width)
+            label = ctk.CTkLabel(self.grid_frame, text=title, fg_color=self.fg_color, width=width, height=row_height)
             label.grid(row=0, column=i, sticky="nsew")
             if title == "Parameter":
                 self.grid_frame.grid_columnconfigure(i, minsize=220)
+
 
     def add_info_entries(self):
         info_labels = ["Name des Templates:", "Zuletzt bearbeitet durch:", "Beschreibung:"]
@@ -116,27 +121,27 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         widgets = []
 
         pset_var = tk.StringVar()
-        pset_dropdown = ttk.Combobox(self.grid_frame, textvariable=pset_var, values=list(self.parameter_dict.keys()), state="readonly", style="TCombobox")
+        pset_dropdown = ttk.Combobox(self.grid_frame, textvariable=pset_var, values=list(self.parameter_dict.keys()), state="readonly", style="TCombobox", font=self.font_size)
         pset_dropdown.grid(row=row_index, column=0, sticky="nsew")
         widgets.append(pset_dropdown)
 
         param_var = tk.StringVar()
-        param_dropdown = ttk.Combobox(self.grid_frame, textvariable=param_var, state="readonly", style="TCombobox")
+        param_dropdown = ttk.Combobox(self.grid_frame, textvariable=param_var, state="readonly", style="TCombobox", font= self.font_size)
         param_dropdown.grid(row=row_index, column=1, sticky="nsew")
         widgets.append(param_dropdown)
 
         category_var = tk.StringVar()
-        category_dropdown = ttk.Combobox(self.grid_frame, textvariable=category_var, values=list(self.unit_categories.keys()), state="readonly", style="TCombobox")
+        category_dropdown = ttk.Combobox(self.grid_frame, textvariable=category_var, values=list(self.unit_categories.keys()), state="readonly", style="TCombobox", font=self.font_size)
         category_dropdown.grid(row=row_index, column=2, sticky="nsew")
         widgets.append(category_dropdown)
 
         source_unit_var = tk.StringVar()
-        source_unit_dropdown = ttk.Combobox(self.grid_frame, textvariable=source_unit_var, state="readonly", style="TCombobox")
+        source_unit_dropdown = ttk.Combobox(self.grid_frame, textvariable=source_unit_var, state="readonly", style="TCombobox", font=self.font_size)
         source_unit_dropdown.grid(row=row_index, column=3, sticky="nsew")
         widgets.append(source_unit_dropdown)
 
         target_unit_var = tk.StringVar()
-        target_unit_dropdown = ttk.Combobox(self.grid_frame, textvariable=target_unit_var, state="readonly", style="TCombobox")
+        target_unit_dropdown = ttk.Combobox(self.grid_frame, textvariable=target_unit_var, state="readonly", style="TCombobox", font=self.font_size)
         target_unit_dropdown.grid(row=row_index, column=4, sticky="nsew")
         widgets.append(target_unit_dropdown)
 
@@ -148,12 +153,12 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         param_dropdown.bind("<<ComboboxSelected>>", lambda event: self.update_param_dropdown(source_unit_dropdown, target_unit_dropdown, category_dropdown))
         category_dropdown.bind("<<ComboboxSelected>>", lambda event, source_unit_dropdown=source_unit_dropdown, target_unit_dropdown=target_unit_dropdown: self.update_unit_dropdowns(category_dropdown, source_unit_dropdown, target_unit_dropdown))
 
-        
         pset_dropdown["text"]=""
         param_dropdown["text"]=""
         category_dropdown["text"]=""
         source_unit_dropdown["text"]=""
         target_unit_dropdown["text"]=""
+        
         if param_info:
             pset_dropdown.set(param_info.get("pset_name", ""))
             self.update_pset_dropdown(pset_dropdown, param_dropdown, source_unit_dropdown, target_unit_dropdown, category_dropdown)
@@ -162,7 +167,9 @@ class bearbeiten_template_frame(ctk.CTkFrame):
             self.update_unit_dropdowns(category_dropdown, source_unit_dropdown, target_unit_dropdown)
             source_unit_dropdown.set(param_info.get("source_unit", ""))
             target_unit_dropdown.set(param_info.get("target_unit", ""))
+
         return widgets
+
 
     def update_scrollregion(self):
         self.grid_frame.update_idletasks()
@@ -248,8 +255,8 @@ if __name__ == "__main__":
     # Konfiguration der Fenstergröße und Position
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    window_width = screen_width // 2
-    window_height = screen_height // 2
+    window_width = (3 * screen_width) // 4
+    window_height = (2 * screen_height) // 3
     x_position = (screen_width - window_width) // 2
     y_position = (screen_height - window_height) // 2
     root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
@@ -279,7 +286,7 @@ if __name__ == "__main__":
     parameter_dict = {'Pset MEP': ['Abbreviation', 'Calc-Pressure loss (Pa)', 'Calc-Required throttling (Pa)', 'Calc-Volumetric flow (m3/h)', 'Calc-Zeta', 'Geom-Additional length (mm)', 'Geom-Angle (°)', 'Geom-Branch length (mm)', 'Geom-Connection length (mm)', 'Geom-Connection Ø (mm)', 'Geom-DN', 'Geom-DN1', 'Geom-DN2', 'Geom-DN3', 'Geom-Half length (mm)', 'Geom-Head Ø (mm)', 'Geom-Housing length (mm)', 'Geom-Housing Ø (mm)', 'Geom-Length (mm)', 'Geom-Length 1 (mm)', 'Geom-Length 2 (mm)', 'Geom-Length branch (mm)', 'Geom-Length outlet (mm)', 'Geom-Main side (mm)', 'Geom-Offnet (mm)', 'Geom-Offset (mm)', 'Geom-Offset 1 (mm)', 'Geom-Offset 2 (mm)', 'Geom-Offset to edge 1 (mm)', 'Geom-Offset to edge 2 (mm)', 'Geom-Outer Ø (mm)', 'Geom-Outer Ø1 (mm)', 'Geom-Outer Ø2 (mm)', 'Geom-Outer Ø3 (mm)', 'Geom-Radius (mm)', 'Geom-Secondary side 1 (mm)', 'Geom-Secondary side 2 (mm)', 'Geom-Section 1 side 1 (mm)', 'Geom-Section 1 side 2 (mm)', 'Geom-Section 2 side 1 (mm)', 'Geom-Section 2 side 2 (mm)', 'Geom-Segment number (if segmented)', 'Geom-Side 1 (mm)', 'Geom-Side 2 (mm)', 'Geom-Spacing between branches (mm)', 'Geom-Spacing to branch (mm)', 'Geom-Surface (m2)', 'Geom-Tenon (mm)', 'Geom-Thickness (mm)', 'Geom-Thickness(mm)', 'Geom-Ø (mm)', 'Geom-Ø branch  (mm)', 'Geom-Ø main (mm)', 'Geom-Ø secondary (mm)', 'Info', 'Name', 'Tech-Insulation surface (m2)', 'Tech-Insulation thickness (mm)', 'Tech-Material', 'Tech-Material (ID)', 'Tech-Medium', 'Tech-Weight (kg)'], 'Pset_SlabCommon': ['IsExternal', 'ThermalTransmittance'], 'Pset nova - Archi': ['Name']}
     
     # Instanziieren und Anzeigen Ihres Frames
-    frame = bearbeiten_template_frame(root, template_data, parameter_dict)
+    frame = bearbeiten_template_frame(root, window_width, window_height, template_data, parameter_dict)
     frame.pack(fill="both", expand=True)
 
     # Starten des Event-Loops

@@ -5,10 +5,11 @@ from tkinter import ttk
 import customtkinter as ctk
 
 class BenutzerdefinierteVorlagen(ctk.CTkFrame):
-    def __init__(self, container):
+    def __init__(self, container, X, Y):
         self.fg_color = "#242424"
-        super().__init__(container,width=1500,height=500, fg_color=self.fg_color)
+        super().__init__(container,width=X, height=Y, fg_color=self.fg_color)
         self.container = container
+        self.font_size = ("Arial", 18)
 
         # # Relativer Pfad zu den benutzerdefinierten Vorlagen
         self.templates_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'Templates', 'custom_templates')
@@ -41,7 +42,9 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.table_frame.pack(fill="both", expand=False, padx=10)
 
         # Erstellen Sie eine Treeview mit maximal 7 Zeilen sichtbar
-        self.table = ttk.Treeview(self.table_frame, columns=("Name", "Datum", "Von", "Beschreibung"), show="headings", height=7,)
+        style = ttk.Style()
+        self.table = ttk.Treeview(self.table_frame, columns=("Name", "Datum", "Von", "Beschreibung"), show="headings", height=10)
+        style.configure("Treeview", rowheight=35)
         self.table.heading("Name", text="Vorlagenname", anchor="w")
         self.table.heading("Datum", text="Zuletzt geändert", anchor="w")
         self.table.heading("Von", text="Geändert von", anchor="w")
@@ -50,13 +53,14 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
 
         # Stil für den Treeview
         style = ttk.Style()
-        style.configure("Treeview", background=self.fg_color, fieldbackground=self.fg_color, foreground="white")
+        style.configure("Treeview", background=self.fg_color, fieldbackground=self.fg_color, foreground=self.fg_color, font=self.font_size)
         style.map("Treeview", background=[("selected", "#0078d7")], foreground=[("selected", "white")])
+        style.configure("Treeview.Heading", font=self.font_size)
         style.layout("Treeview", [('Treeview.treearea', {'sticky': 'nswe'})])
 
         # Farben für die Tabelle und Überschriften setzen
-        self.table.tag_configure("evenrow", background="#242424", foreground="white")
-        self.table.tag_configure("oddrow", background="#323232", foreground="white")
+        self.table.tag_configure("evenrow", background="#242424", foreground="white", font=self.font_size)
+        self.table.tag_configure("oddrow", background="#323232", foreground="white", font=self.font_size)
 
         # Scrollbar für die Tabelle rechts neben der Tabelle platzieren
         self.scrollbar = ttk.Scrollbar(self.table_frame, orient="vertical", command=self.table.yview)
@@ -90,9 +94,9 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
 
     def set_initial_column_width(self):
         # Setze die anfängliche Breite der Spalten und behalte sie bei
-        self.table.column("Name", width=250, stretch=tk.NO)
-        self.table.column("Datum", width=120, stretch=tk.NO)
-        self.table.column("Von", width=80, stretch=tk.NO)
+        self.table.column("Name", width=350, stretch=tk.NO)
+        self.table.column("Datum", width=300, stretch=tk.NO)
+        self.table.column("Von", width=200, stretch=tk.NO)
         self.table.column("Beschreibung", width=900, stretch=tk.NO)
     
     def neu_button_aktion(self):
@@ -151,14 +155,14 @@ if __name__ == "__main__":
     # Konfiguration der Fenstergröße und Position
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    window_width = screen_width // 2
-    window_height = screen_height // 2
+    window_width = (3 * screen_width) // 4
+    window_height = (2 * screen_height) // 3
     x_position = (screen_width - window_width) // 2
     y_position = (screen_height - window_height) // 2
     root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
 
     # Instanziieren und Anzeigen des BenutzerdefinierteVorlagen Frames
-    benutzerdefinierte_vorlagen_frame = BenutzerdefinierteVorlagen(root)
+    benutzerdefinierte_vorlagen_frame = BenutzerdefinierteVorlagen(root, window_width, window_height)
     benutzerdefinierte_vorlagen_frame.pack(fill="both", expand=True)
 
     # Starten des Event-Loops

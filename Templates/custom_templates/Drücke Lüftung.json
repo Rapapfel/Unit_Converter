@@ -1,8 +1,8 @@
 {
-    "template_name": "test_2",
-    "last_modified": "2023-12-18 20:31:28",
-    "modified_by": "adsf",
-    "description": "asdf",
+    "template_name": "Drücke Lüftung",
+    "last_modified": "2024-01-07 20:27:51",
+    "modified_by": "MEIL",
+    "description": "Druckverluste",
     "parameters": {
         "Pset MEP — Calc-Pressure loss (Pa) — Druck": {
             "source_unit": "bar",
