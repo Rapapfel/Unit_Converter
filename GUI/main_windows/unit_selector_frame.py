@@ -1,15 +1,27 @@
 import customtkinter as ctk
 
+# Die Klasse Unit_selector erstellen, die ein Frame für die Auswahl der Einheiten darstellt
 class Unit_selector(ctk.CTkFrame):
     def __init__(self, container, X, Y):
+        """
+        Konstruktor für die Unit_selector-Klasse.
+
+        Args:
+            container: Das übergeordnete Container-Widget.
+            X: Die Breite des Frames.
+            Y: Die Höhe des Frames.
+        """
         self.fg_color = "#242424"
-        super().__init__(container,width=X,height=Y, fg_color=self.fg_color)
+        super().__init__(container, width=X, height=Y, fg_color=self.fg_color)
         self.container = container
 
         self.einheitenauswahl = ctk.StringVar(value="SI")  # Standardauswahl auf "SI" setzen
         self.widgets_erstellen()
 
     def widgets_erstellen(self):
+        """
+        Erstellt die GUI-Elemente im Frame.
+        """
         # Beschriftung
         self.beschriftung = ctk.CTkLabel(self, text="Bitte wählen Sie aus, in welche Einheiten das IFC konvertiert werden soll")
         self.beschriftung.place(relx=0.5, rely=0.35, anchor=ctk.CENTER)
@@ -36,13 +48,20 @@ class Unit_selector(ctk.CTkFrame):
         self.benutzerdefiniert_radiobutton.place(relx=0.425, rely=0.575)
 
     def weiter_aktion(self):
+        """
+        Aktion, die beim Klicken auf die "Weiter"-Schaltfläche ausgeführt wird.
+        """
         if self.benutzerdefiniert_radiobutton:
             self.container.unit_selector_callback()
 
     def abbrechen_aktion(self):
+        """
+        Aktion, die beim Klicken auf die "Abbrechen"-Schaltfläche ausgeführt wird.
+        """
         # Die Anwendung schließen
         self.container.abbrechen()
 
+# Hauptprogramm
 if __name__ == "__main__":
     # Erstellen des Hauptfensters
     root = ctk.CTk()
@@ -62,4 +81,3 @@ if __name__ == "__main__":
 
     # Starten des Event-Loops
     root.mainloop()
-

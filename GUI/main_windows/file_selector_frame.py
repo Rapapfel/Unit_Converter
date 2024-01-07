@@ -1,17 +1,27 @@
 import customtkinter as ctk
 from tkinter import filedialog
 
-class file_selector_frame(ctk.CTkFrame):
+class FileSelectorFrame(ctk.CTkFrame):
     def __init__(self, container, X, Y):
+        """
+        Konstruktor für die FileSelectorFrame-Klasse.
+        
+        Args:
+            container: Das übergeordnete Container-Objekt.
+            X: Die Breite des Frames.
+            Y: Die Höhe des Frames.
+        """
         self.fg_color = "#242424"
-        super().__init__(container,width=X,height=Y, fg_color=self.fg_color)
+        super().__init__(container, width=X, height=Y, fg_color=self.fg_color)
         self.selected_file_path = None  # Initialisieren Sie die Variable mit None
         self.container = container
 
         self.widgets_erstellen()
 
-
     def widgets_erstellen(self):
+        """
+        Methode zur Erstellung der GUI-Widgets im Frame.
+        """
         # Beschriftung
         self.beschriftung = ctk.CTkLabel(self, text="Bitte wählen Sie den Dateipfad der IFC-Datei, bei der Sie die Einheiten ändern möchten")
         self.beschriftung.place(relx=0.5, rely=0.2, anchor=ctk.CENTER)
@@ -33,6 +43,9 @@ class file_selector_frame(ctk.CTkFrame):
         self.dateipfad_eingabe.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
     def datei_auswaehlen(self):
+        """
+        Methode zum Auswählen des Dateipfads über einen Datei-Dialog.
+        """
         # Einen Datei-Dialog öffnen, um eine Datei mit der Erweiterung ".ifc" auszuwählen und den Pfad im Eingabefeld anzeigen
         filetypes = [("IFC-Dateien", "*.ifc")]
         dateipfad = filedialog.askopenfilename(filetypes=filetypes)
@@ -44,12 +57,16 @@ class file_selector_frame(ctk.CTkFrame):
             self.dateipfad_eingabe.configure(state='disabled')  # Deaktiviert das Eingabefeld wieder
 
     def weiter_aktion(self):
+        """
+        Methode zur Fortsetzung der Anwendung nach Auswahl der Datei.
+        """
         if self.selected_file_path:
             self.container.ifc_import_callback(self.selected_file_path)
 
-        
-
     def anwendung_schliessen(self):
+        """
+        Methode zum Schließen der Anwendung.
+        """
         # Die Anwendung schließen
         self.container.abbrechen()
 
@@ -67,7 +84,7 @@ if __name__ == "__main__":
     root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
 
     # Instanziieren und Anzeigen des Frames
-    frame = file_selector_frame(root, window_width - 60, window_height)
+    frame = FileSelectorFrame(root, window_width - 60, window_height)
     frame.pack(fill="both", expand=True)
 
     # Starten des Event-Loops

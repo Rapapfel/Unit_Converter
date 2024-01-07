@@ -6,12 +6,20 @@ import customtkinter as ctk
 
 class BenutzerdefinierteVorlagen(ctk.CTkFrame):
     def __init__(self, container, X, Y):
+        """
+        Konstruktor der BenutzerdefinierteVorlagen-Klasse.
+
+        Parameter:
+        - container: Tkinter-Container, in dem das Frame platziert wird.
+        - X: Breite des Frames.
+        - Y: Höhe des Frames.
+        """
         self.fg_color = "#242424"
         super().__init__(container,width=X, height=Y, fg_color=self.fg_color)
         self.container = container
         self.font_size = ("Arial", 18)
 
-        # # Relativer Pfad zu den benutzerdefinierten Vorlagen
+        # Relativer Pfad zu den benutzerdefinierten Vorlagen
         self.templates_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'Templates', 'custom_templates')
 
         # Beschriftung
@@ -84,6 +92,9 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
         self.table_frame.place(relx=0.5, rely=0.45, anchor=ctk.CENTER)
 
     def load_templates(self):
+        """
+        Lädt die Vorlagendaten aus den Dateien und fügt sie der Tabelle hinzu.
+        """
         for index, filename in enumerate(os.listdir(self.templates_dir)):
             if filename.endswith(".json"):
                 file_path = os.path.join(self.templates_dir, filename)
@@ -93,17 +104,25 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
                     self.table.insert("", "end", values=(data["template_name"], data["last_modified"], data["modified_by"], data["description"]), tags=(row_tag,))
 
     def set_initial_column_width(self):
-        # Setze die anfängliche Breite der Spalten und behalte sie bei
+        """
+        Setzt die anfängliche Breite der Spalten in der Tabelle.
+        """
         self.table.column("Name", width=350, stretch=tk.NO)
         self.table.column("Datum", width=300, stretch=tk.NO)
         self.table.column("Von", width=200, stretch=tk.NO)
         self.table.column("Beschreibung", width=900, stretch=tk.NO)
     
     def neu_button_aktion(self):
+        """
+        Aktion, die ausgeführt wird, wenn der "Neu" Button geklickt wird.
+        """
         if self.neu_button:
             self.container.neu_template_frame_callback()
     
     def löschen_button_aktion(self):
+        """
+        Aktion, die ausgeführt wird, wenn der "Löschen" Button geklickt wird.
+        """
         selected_item = self.table.focus()
         if selected_item:
             item_data = self.table.item(selected_item, "values")
@@ -112,9 +131,15 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
                 self.container.löschen_template_frame_callback(template_name)
     
     def import_button_aktion(self):
+        """
+        Aktion, die ausgeführt wird, wenn der "Import" Button geklickt wird.
+        """
         self.container.import_template_frame_callback()
 
     def export_button_aktion(self):
+        """
+        Aktion, die ausgeführt wird, wenn der "Export" Button geklickt wird.
+        """
         selected_item = self.table.focus()
         if selected_item:
             item_data = self.table.item(selected_item, "values")
@@ -123,29 +148,50 @@ class BenutzerdefinierteVorlagen(ctk.CTkFrame):
                 self.container.export_template_frame_callback(template_name)
         
     def bearbeiten_button_aktion(self):
+        """
+        Bearbeitet die ausgewählte Vorlage, indem sie die Vorlagendaten lädt und an die entsprechende Methode im Container weitergibt.
+        """
+        # Das ausgewählte Element in der Tabelle erhalten
         selected_item = self.table.focus()
         if selected_item:
+            # Daten des ausgewählten Elements abrufen
             item_data = self.table.item(selected_item, "values")
             if item_data:
+                # Name der Vorlage aus den Daten extrahieren
                 template_name = item_data[0]
                 self.container.set_current_template_name(template_name)  # Neu hinzugefügt
+                # Pfad zur Vorlagendatei erstellen
                 file_path = os.path.join(self.templates_dir, f"{template_name}.json")
+                # Vorlagendaten aus der Datei laden
                 with open(file_path, 'r', encoding='utf-8') as file:
                     template_data = json.load(file)
+                # Callback-Funktion im Container aufrufen und Vorlagendaten übergeben
                 self.container.bearbeiten_template_frame_callback(template_data)
 
+
     def weiter_button_aktion(self):
-        selected_item = self.table.focus()  # ID des ausgewählten Elements erhalten
+        """
+        Fährt mit der Bearbeitung der ausgewählten Vorlage fort, indem die Vorlage verarbeitet und das Ergebnis gespeichert wird.
+        """
+        # Die ID des ausgewählten Elements in der Tabelle erhalten
+        selected_item = self.table.focus()
         if selected_item:
+            # Daten des ausgewählten Elements abrufen
             item_data = self.table.item(selected_item, "values")
             if item_data and len(item_data) > 0:
-                template_name = item_data[0]  # Name des ausgewählten Templates
+                # Name der ausgewählten Vorlage extrahieren
+                template_name = item_data[0]
+                # Methode im Container aufrufen, um die ausgewählte Vorlage zu verarbeiten
                 self.container.process_selected_template(template_name)
+                # Callback-Funktion im Container aufrufen, um das Ergebnis zu speichern
                 self.container.file_saver_frame_callback()
                 
 
     def abbrechen_aktion(self):
-        # Die Anwendung schließen
+        """
+        Beendet die Anwendung.
+        """
+        # Die Methode im Container aufrufen, um die Anwendung zu beenden
         self.container.abbrechen()
 
 if __name__ == "__main__":

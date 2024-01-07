@@ -2,16 +2,22 @@ import customtkinter as ctk
 
 class file_selctor_status_frame(ctk.CTkToplevel):
     def __init__(self):
+        """
+        Konstruktor für die file_selctor_status_frame-Klasse.
+        """
         super().__init__()
         self.title("Fehlermeldung")
         self.geometry("450x200")
-        self.attributes("-topmost",True)
+        self.attributes("-topmost", True)
 
         self.widgets_erstellen()
 
     def widgets_erstellen(self):
+        """
+        Erstellt die GUI-Elemente im Toplevel-Fenster.
+        """
         # Beschriftung für die Fehlermeldung
-        self.fehlermeldung = ctk.CTkLabel(self, text="Die ausgewählte Datei konnte nicht geladen. Versuche es erneut!")
+        self.fehlermeldung = ctk.CTkLabel(self, text="Die ausgewählte Datei konnte nicht geladen werden. Versuchen Sie es erneut!")
         self.fehlermeldung.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
         # OK-Schaltfläche zum Schließen des Fensters
@@ -19,8 +25,12 @@ class file_selctor_status_frame(ctk.CTkToplevel):
         self.ok_button.place(relx=0.5, rely=0.7, anchor=ctk.CENTER)
 
     def fenster_schliessen(self):
+        """
+        Aktion, die beim Klicken auf die "OK"-Schaltfläche ausgeführt wird, um das Fenster zu schließen.
+        """
         self.destroy()
 
+# Hauptprogramm
 if __name__ == "__main__":
     # Erstellen eines Hauptfensters
     root = ctk.CTk()

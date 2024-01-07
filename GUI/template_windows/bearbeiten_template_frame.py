@@ -6,6 +6,17 @@ import json
 
 class bearbeiten_template_frame(ctk.CTkFrame):
     def __init__(self, container, X, Y, template_data, parameter_dict):
+        """
+        Initialisiert das Template-Bearbeitungs-Fenster.
+
+        Args:
+            container (objekt): Das übergeordnete Container-Objekt.
+            X (int): Breite des Frames.
+            Y (int): Höhe des Frames.
+            template_data (dict): Daten des Templates, z.B. Name, Beschreibung, Parameter.
+            parameter_dict (dict): Dictionary mit verfügbaren Parametern.
+        """
+        # Hintergrundfarbe für das Fenster
         self.fg_color = "#242424"
         super().__init__(container, width=X, height=Y, fg_color=self.fg_color)
         self.container = container
@@ -14,12 +25,10 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         self.font_size = ("Arial", 18)
         self.option_add('*TCombobox*Font', ('Arial', 15))
 
-        
         # Vorbefüllen der allgemeinen Template-Informationen
         self.name_template = template_data.get("template_name", "")
         self.bearbeitet_durch = template_data.get("modified_by", "")
         self.beschreibung_template = template_data.get("description", "")
-        
 
         # Laden der Einheiten aus der JSON-Datei
         current_script = os.path.dirname(os.path.realpath(__file__))
@@ -27,28 +36,36 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         with open(json_path, "r") as file:
             self.unit_categories = json.load(file)
 
+        # Erzeugung des GUI-Stils
         style = ttk.Style()
         style.theme_use('clam')
         style.configure("TCombobox", fieldbackground=self.fg_color, background=self.fg_color, foreground="white", arrowcolor="white")
         style.map("TCombobox", fieldbackground=[("readonly", self.fg_color)], selectbackground=[("readonly", self.fg_color)], selectforeground=[("readonly", "white")])
 
+        # Erzeugung des Container-Frames
         self.container_frame = ctk.CTkFrame(self, fg_color=self.fg_color)
         self.container_frame.place(relx=0.1, rely=0.5, relwidth=0.9, relheight=0.4, anchor=ctk.W)
 
+        # Erzeugung der Canvas für das Scrollen
         self.canvas = tk.Canvas(self.container_frame, bg=self.fg_color, highlightthickness=0)
         self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
+        # Erzeugung der Scrollleiste
         self.scrollbar = ctk.CTkScrollbar(self.container_frame, command=self.canvas.yview, fg_color=self.fg_color)
         self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
+        # Erzeugung des Gitter-Frames im Canvas
         self.grid_frame = ctk.CTkFrame(self.canvas, fg_color=self.fg_color)
         self.canvas_frame = self.canvas.create_window((0, 0), window=self.grid_frame, anchor="nw")
 
+        # Liste für die Zeilen im Grid
         self.rows = []
 
+        # Hinzufügen der Spaltentitel
         self.add_column_titles()
 
+        # Hinzufügen der "+""-Schaltfläche für neue Zeilen
         self.add_row_button = ctk.CTkButton(self, text="+", command=self.add_row)
         self.add_row_button.place(relx=0.5, rely=0.85, anchor=ctk.CENTER)
 
@@ -68,8 +85,10 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         self.beschreibung_template_entry = tk.Entry(self, background=self.fg_color, foreground="white", font=self.font_size)
         self.beschreibung_template_entry.place(relx=0.3, rely=0.2, relwidth=0.6)
 
+        # Hinzufügen von Info-Etiketten für die Template-Informationen
         self.add_info_entries()
 
+        # Hinzufügen einer leeren Zeile, wenn keine Parameter vorhanden sind
         if len(self.template_parameter_dict.items()) == 0:
             self.add_row()
 
@@ -81,8 +100,10 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         # Vorbelegen der Parameterzeilen
         self.initialize_parameters()
 
-    
     def initialize_parameters(self):
+        """
+        Initialisiert die Parameter auf Basis eines Vorlagenparameter-Dikts.
+        """
         for param_key, param_values in self.template_parameter_dict.items():
             # Zerlege den zusammengesetzten Schlüssel
             pset_name, param_name, category_name = param_key.split(' — ')
@@ -95,8 +116,11 @@ class bearbeiten_template_frame(ctk.CTkFrame):
             self.add_row(full_param_info)
 
     def add_column_titles(self):
+        """
+        Fügt Spaltentitel zur Benutzeroberfläche hinzu.
+        """
         titles = ["Pset", "Parameter", "Einheitenkategorie", "Quelleinheit", "Zieleinheit", ""]
-        column_widths = [100, 220, 150, 200, 200, 20]  # Define column widths
+        column_widths = [100, 220, 150, 200, 200, 20]  # Definiert die Spaltenbreiten
         row_height = 30  # Beispielhöhe, kann angepasst werden
         for i, (title, width) in enumerate(zip(titles, column_widths)):
             label = ctk.CTkLabel(self.grid_frame, text=title, fg_color=self.fg_color, width=width, height=row_height)
@@ -104,61 +128,78 @@ class bearbeiten_template_frame(ctk.CTkFrame):
             if title == "Parameter":
                 self.grid_frame.grid_columnconfigure(i, minsize=220)
 
-
     def add_info_entries(self):
+        """
+        Fügt Informationslabels zur Benutzeroberfläche hinzu.
+        """
         info_labels = ["Name des Templates:", "Zuletzt bearbeitet durch:", "Beschreibung:"]
         for i, label_text in enumerate(info_labels):
             label = ctk.CTkLabel(self, text=label_text, fg_color=self.fg_color)
             label.place(relx=0.1, rely=0.1 + i * 0.05, anchor=ctk.W)
 
     def add_row(self, param_info=None):
+        """
+        Fügt eine Zeile zur Tabelle hinzu.
+        """
         row_index = len(self.rows) + 1
         widgets = self.create_row_widgets(row_index, param_info)
         self.rows.append(widgets)
         self.update_scrollregion()
 
     def create_row_widgets(self, row_index, param_info=None):
+        """
+        Erstellt die Widgets für eine Zeile in der Tabelle.
+        """
         widgets = []
 
+        # Dropdown für Pset
         pset_var = tk.StringVar()
         pset_dropdown = ttk.Combobox(self.grid_frame, textvariable=pset_var, values=list(self.parameter_dict.keys()), state="readonly", style="TCombobox", font=self.font_size)
         pset_dropdown.grid(row=row_index, column=0, sticky="nsew")
         widgets.append(pset_dropdown)
 
+        # Dropdown für Parameter
         param_var = tk.StringVar()
         param_dropdown = ttk.Combobox(self.grid_frame, textvariable=param_var, state="readonly", style="TCombobox", font= self.font_size)
         param_dropdown.grid(row=row_index, column=1, sticky="nsew")
         widgets.append(param_dropdown)
 
+        # Dropdown für Einheitenkategorie
         category_var = tk.StringVar()
         category_dropdown = ttk.Combobox(self.grid_frame, textvariable=category_var, values=list(self.unit_categories.keys()), state="readonly", style="TCombobox", font=self.font_size)
         category_dropdown.grid(row=row_index, column=2, sticky="nsew")
         widgets.append(category_dropdown)
 
+        # Dropdown für Quelleinheit
         source_unit_var = tk.StringVar()
         source_unit_dropdown = ttk.Combobox(self.grid_frame, textvariable=source_unit_var, state="readonly", style="TCombobox", font=self.font_size)
         source_unit_dropdown.grid(row=row_index, column=3, sticky="nsew")
         widgets.append(source_unit_dropdown)
 
+        # Dropdown für Zieleinheit
         target_unit_var = tk.StringVar()
         target_unit_dropdown = ttk.Combobox(self.grid_frame, textvariable=target_unit_var, state="readonly", style="TCombobox", font=self.font_size)
         target_unit_dropdown.grid(row=row_index, column=4, sticky="nsew")
         widgets.append(target_unit_dropdown)
 
+        # Entfernen-Button
         remove_button = ctk.CTkButton(self.grid_frame, text="-", width=2, height=1, command=lambda: self.remove_row(row_index))
         remove_button.grid(row=row_index, column=5, sticky="nsew")
         widgets.append(remove_button)
 
+        # Event-Handler für Dropdown-Auswahl
         pset_dropdown.bind("<<ComboboxSelected>>", lambda event, pset_dropdown=pset_dropdown, param_dropdown=param_dropdown: self.update_pset_dropdown(pset_dropdown, param_dropdown, source_unit_dropdown, target_unit_dropdown, category_dropdown))
         param_dropdown.bind("<<ComboboxSelected>>", lambda event: self.update_param_dropdown(source_unit_dropdown, target_unit_dropdown, category_dropdown))
         category_dropdown.bind("<<ComboboxSelected>>", lambda event, source_unit_dropdown=source_unit_dropdown, target_unit_dropdown=target_unit_dropdown: self.update_unit_dropdowns(category_dropdown, source_unit_dropdown, target_unit_dropdown))
 
+        # Initialisiere Dropdown-Texte
         pset_dropdown["text"]=""
         param_dropdown["text"]=""
         category_dropdown["text"]=""
         source_unit_dropdown["text"]=""
         target_unit_dropdown["text"]=""
         
+        # Setze Dropdown-Werte basierend auf param_info
         if param_info:
             pset_dropdown.set(param_info.get("pset_name", ""))
             self.update_pset_dropdown(pset_dropdown, param_dropdown, source_unit_dropdown, target_unit_dropdown, category_dropdown)
@@ -170,83 +211,143 @@ class bearbeiten_template_frame(ctk.CTkFrame):
 
         return widgets
 
-
     def update_scrollregion(self):
+        """
+        Aktualisiert die Scrollregion des Canvas.
+        """
         self.grid_frame.update_idletasks()
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
-    def scroll_canvas_area(self, event, canvas):
-        canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+def scroll_canvas_area(self, event, canvas):
+    """
+    Scrollt den Bereich der Leinwand basierend auf dem Mausradereignis.
 
-    def is_row_complete(self, row_widgets):
-        pset_dropdown, param_dropdown, category_dropdown, source_unit_dropdown, target_unit_dropdown, remove_button = row_widgets
-        return pset_dropdown.get() and param_dropdown.get() and category_dropdown.get() and source_unit_dropdown.get() and target_unit_dropdown.get()
+    Args:
+        event (Event): Das Mausradereignis.
+        canvas (Canvas): Die Leinwand, die gescrollt werden soll.
+    """
+    canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
-    def remove_row(self, row_index):
-        widgets_to_remove = self.rows.pop(row_index - 1)
-        for widget in widgets_to_remove:
-            widget.destroy()
-        self.update_scrollregion()
+def is_row_complete(self, row_widgets):
+    """
+    Überprüft, ob alle Widgets in einer Zeile einen ausgewählten Wert haben.
 
-    def update_pset_dropdown(self, pset_dropdown, param_dropdown, source_unit_dropdown, target_unit_dropdown, category_dropdown):
-        selected_pset = pset_dropdown.get()
-        param_dropdown["values"] = self.parameter_dict[selected_pset]
-        param_dropdown.set("")
-        category_dropdown.set("")
+    Args:
+        row_widgets (Tuple): Die Widgets in der Zeile.
+
+    Returns:
+        bool: True, wenn alle Widgets einen ausgewählten Wert haben, sonst False.
+    """
+    pset_dropdown, param_dropdown, category_dropdown, source_unit_dropdown, target_unit_dropdown, remove_button = row_widgets
+    return pset_dropdown.get() and param_dropdown.get() and category_dropdown.get() and source_unit_dropdown.get() and target_unit_dropdown.get()
+
+def remove_row(self, row_index):
+    """
+    Entfernt eine Zeile aus der Benutzeroberfläche und aktualisiert die Scrollregion.
+
+    Args:
+        row_index (int): Der Index der zu entfernenden Zeile.
+    """
+    widgets_to_remove = self.rows.pop(row_index - 1)
+    for widget in widgets_to_remove:
+        widget.destroy()
+    self.update_scrollregion()
+
+def update_pset_dropdown(self, pset_dropdown, param_dropdown, source_unit_dropdown, target_unit_dropdown, category_dropdown):
+    """
+    Aktualisiert das Parameter-Set Dropdown basierend auf dem ausgewählten Wert der vorherigen Dropdowns.
+
+    Args:
+        pset_dropdown (Dropdown): Das Dropdown für das Parameter-Set.
+        param_dropdown (Dropdown): Das Dropdown für die Parameter.
+        source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
+        target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
+        category_dropdown (Dropdown): Das Dropdown für die Kategorie.
+    """
+    selected_pset = pset_dropdown.get()
+    param_dropdown["values"] = self.parameter_dict[selected_pset]
+    param_dropdown.set("")
+    category_dropdown.set("")
+    source_unit_dropdown.set("")
+    target_unit_dropdown.set("")
+
+def update_param_dropdown(self, source_unit_dropdown, target_unit_dropdown, category_dropdown):
+    """
+    Aktualisiert das Parameter-Dropdown basierend auf dem ausgewählten Wert des Kategorien-Dropdowns.
+
+    Args:
+        source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
+        target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
+        category_dropdown (Dropdown): Das Dropdown für die Kategorie.
+    """
+    category_dropdown.set("")
+    source_unit_dropdown.set("")
+    target_unit_dropdown.set("")
+
+def update_unit_dropdowns(self, category_dropdown, source_unit_dropdown, target_unit_dropdown):
+    """
+    Aktualisiert die Quell- und Zieleinheit-Dropdowns basierend auf dem ausgewählten Wert des Kategorien-Dropdowns.
+
+    Args:
+        category_dropdown (Dropdown): Das Dropdown für die Kategorie.
+        source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
+        target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
+    """
+    selected_category = category_dropdown.get()
+    if selected_category:
+        units = self.unit_categories[selected_category]
+        source_unit_dropdown["values"] = units
+        target_unit_dropdown["values"] = units
         source_unit_dropdown.set("")
-        target_unit_dropdown.set("")
-    
-    def update_param_dropdown(self, source_unit_dropdown, target_unit_dropdown, category_dropdown):
-        category_dropdown.set("")
-        source_unit_dropdown.set("")
-        target_unit_dropdown.set("")
+        target_unit_dropdown.set("")  
 
-    def update_unit_dropdowns(self, category_dropdown, source_unit_dropdown, target_unit_dropdown):
-        selected_category = category_dropdown.get()
-        if selected_category:
-            units = self.unit_categories[selected_category]
-            source_unit_dropdown["values"] = units
-            target_unit_dropdown["values"] = units
-            source_unit_dropdown.set("")
-            target_unit_dropdown.set("")  
+def transform_selected_parameters_to_dict(self):
+    """
+    Wandelt die ausgewählten Parameter in ein Wörterbuch um.
 
-    def transform_selected_parameters_to_dict(self):
-            selected_parameters = {}
-            for row_widgets in self.rows:
-                pset_dropdown, param_dropdown, category_unit, source_unit, target_unit, _ = row_widgets
-                if pset_dropdown.get() and param_dropdown.get() and source_unit.get() and target_unit.get():
-                    pset_name = pset_dropdown.get()
-                    param_name = param_dropdown.get()
-                    category_name = category_unit.get()
-                    source_unit_name = source_unit.get()
-                    target_unit_name = target_unit.get()
-                    selected_parameters[f"{pset_name} — {param_name} — {category_name}"] = {
-                        "source_unit": source_unit_name,
-                        "target_unit": target_unit_name
-                    }
-            return selected_parameters
-
-    def ändern_aktion(self):
-        if self.ändern_button:
-            name_template_neu = self.name_template_entry.get()
-            bearbeitet_durch = self.bearbeitet_durch_entry.get()
-            beschreibung_template = self.beschreibung_template_entry.get()
-            selected_parameters = self.transform_selected_parameters_to_dict()
-
-            template_data = {
-                "template_name_new": name_template_neu,
-                "modified_by": bearbeitet_durch,
-                "description": beschreibung_template,
-                "parameters": selected_parameters
+    Returns:
+        dict: Das Wörterbuch der ausgewählten Parameter.
+    """
+    selected_parameters = {}
+    for row_widgets in self.rows:
+        pset_dropdown, param_dropdown, category_unit, source_unit, target_unit, _ = row_widgets
+        if pset_dropdown.get() and param_dropdown.get() and source_unit.get() and target_unit.get():
+            pset_name = pset_dropdown.get()
+            param_name = param_dropdown.get()
+            category_name = category_unit.get()
+            source_unit_name = source_unit.get()
+            target_unit_name = target_unit.get()
+            selected_parameters[f"{pset_name} — {param_name} — {category_name}"] = {
+                "source_unit": source_unit_name,
+                "target_unit": target_unit_name
             }
+    return selected_parameters
 
-            self.container.ändern_template_callback(template_data)
+def ändern_aktion(self):
+    """
+    Führt die Aktion der Template-Änderung basierend auf den eingegebenen Werten aus.
+    """
+    if self.ändern_button:
+        name_template_neu = self.name_template_entry.get()
+        bearbeitet_durch = self.bearbeitet_durch_entry.get()
+        beschreibung_template = self.beschreibung_template_entry.get()
+        selected_parameters = self.transform_selected_parameters_to_dict()
 
-    def abbrechen_aktion(self):
-        if self.abbrechen_aktion:
-            self.container.abbrechen_template_callback()
+        template_data = {
+            "template_name_new": name_template_neu,
+            "modified_by": bearbeitet_durch,
+            "description": beschreibung_template,
+            "parameters": selected_parameters
+        }
 
+        self.container.ändern_template_callback(template_data)
 
+def abbrechen_aktion(self):
+    """
+    Führt die Aktion der Template-Abbruch aus.
+    """
+    if self.abbrechen_aktion:
+        self.container.abbrechen_template_callback()
 
 if __name__ == "__main__":
 

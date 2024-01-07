@@ -3,13 +3,24 @@ from tkinter import filedialog
 
 class IFC_File_Saver_frame(ctk.CTkFrame):
     def __init__(self, container, X, Y):
+        """
+        Konstruktor für die IFC_File_Saver_frame Klasse.
+        
+        Args:
+            container: Das übergeordnete Container-Objekt.
+            X: Die Breite des Frames.
+            Y: Die Höhe des Frames.
+        """
         self.fg_color = "#242424"
-        super().__init__(container,width=X,height=Y, fg_color=self.fg_color)
+        super().__init__(container, width=X, height=Y, fg_color=self.fg_color)
         self.container = container
 
         self.widgets_erstellen()
 
     def widgets_erstellen(self):
+        """
+        Methode zur Erstellung der GUI-Widgets im Frame.
+        """
         # Beschriftung
         self.beschriftung = ctk.CTkLabel(self, text="Bitte wählen Sie den Dateipfad, um die neue IFC-Datei zu speichern")
         self.beschriftung.place(relx=0.5, rely=0.2, anchor=ctk.CENTER)
@@ -31,6 +42,9 @@ class IFC_File_Saver_frame(ctk.CTkFrame):
         self.dateipfad_eingabe.place(relx=0.5, rely=0.4, anchor=ctk.CENTER)
 
     def dateipfad_auswaehlen(self):
+        """
+        Methode zum Auswählen des Dateipfads über einen Datei-Dialog.
+        """
         # Einen Datei-Dialog öffnen, um einen Speicherort auszuwählen und den Pfad im Eingabefeld anzeigen
         dateipfad = filedialog.asksaveasfilename(defaultextension=".ifc")
         if dateipfad:
@@ -41,12 +55,18 @@ class IFC_File_Saver_frame(ctk.CTkFrame):
             self.dateipfad_eingabe.configure(state='disabled')  # Deaktiviert das Eingabefeld wieder
 
     def datei_speichern(self):
+        """
+        Methode zum Speichern der ausgewählten Datei und Auslösen von Callbacks.
+        """
         if self.selected_save_file_path:
             self.container.process_selected_save_file_path(self.selected_save_file_path)
             self.container.extract_data_and_update_ifc_callback()
             self.container.end_status_frame_callback()
 
     def anwendung_schliessen(self):
+        """
+        Methode zum Schließen der Anwendung.
+        """
         # Die Anwendung schließen
         self.destroy()
 

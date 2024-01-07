@@ -2,12 +2,23 @@ import customtkinter as ctk
 
 class end_status_frame(ctk.CTkFrame):
     def __init__(self, master, X, Y):
+        """
+        Konstruktor für die end_status_frame-Klasse.
+
+        Args:
+            master: Das übergeordnete Container-Widget.
+            X: Die Breite des Frames.
+            Y: Die Höhe des Frames.
+        """
         self.fg_color = "#242424"
-        super().__init__(master, width=X,height=Y, fg_color=self.fg_color)
+        super().__init__(master, width=X, height=Y, fg_color=self.fg_color)
 
         self.widgets_erstellen()
 
     def widgets_erstellen(self):
+        """
+        Erstellt die GUI-Elemente im Frame.
+        """
         # Beschriftung für die Feritginformation
         text1 = "Die Einheiten der gewählten IFC-Datei wurden umgewandelt und"
         text2 = "eine neue IFC-Datei unter ihrem angegebenen Pfad abgespeichert"
@@ -23,8 +34,12 @@ class end_status_frame(ctk.CTkFrame):
         self.end_button.place(relx=0.5, rely=0.6, anchor=ctk.CENTER)
 
     def fenster_schliessen(self):
+        """
+        Aktion, die beim Klicken auf die "Beenden"-Schaltfläche ausgeführt wird, um das Fenster und das Programm zu schließen.
+        """
         self.quit()
 
+# Hauptprogramm
 if __name__ == "__main__":
     # Erstellen des Hauptfensters
     root = ctk.CTk()

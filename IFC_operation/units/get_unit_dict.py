@@ -6,9 +6,29 @@ from itertools import product
 import json
 
 def filter_units_by_dimension(unit_dict, dimension):
+    """
+    Filtert Einheiten aus einem Dictionary basierend auf ihrer Dimension.
+
+    Parameters:
+    - unit_dict: Ein Dictionary mit Einheiten
+    - dimension: Die zu filternde Dimension
+
+    Returns:
+    - Ein Set mit den Einheiten, die die angegebene Dimension haben
+    """
     return {unit.name for unit in unit_dict.values() if isinstance(unit, units.Unit) and unit.dimension == dimension}
 
 def replace_symbols_in_formula(formula, replacements):
+    """
+    Ersetzt Symbole in einer mathematischen Formel durch Werte.
+
+    Parameters:
+    - formula: Die mathematische Formel als sympy-Ausdruck
+    - replacements: Ein Dictionary, das Symbole als Schlüssel und ihre Werte als Werte enthält
+
+    Returns:
+    - Die aktualisierte Formel als sympy-Ausdruck
+    """
     for symbol, value in replacements.items():
         formula = formula.subs(Symbol(symbol), value)
     return formula
@@ -40,6 +60,12 @@ formulas = {
 
 # Funktion zum Erstellen des Units Dictionary
 def create_units_dictionary():
+    """
+    Erstellt ein Dictionary, das verschiedene Einheitskategorien und die zugehörigen Einheiten enthält.
+
+    Returns:
+    - Ein Dictionary mit Einheitskategorien als Schlüssel und den zugehörigen Einheiten als Werte.
+    """
     units_dict = {
         "Länge": filter_units_by_dimension(all_units, Dimension('length')),
         "Masse": filter_units_by_dimension(all_units, Dimension('mass')),
@@ -66,12 +92,10 @@ def create_units_dictionary():
     }
 
     # Erweitern der Einheiten durch Formeln
-    # Erweitern der Einheiten durch Formeln
     for category in units_dict:
         if category in formulas:
             for formula in formulas[category]:
                 if 'volume' in formula:
-                    # Verwenden Sie die zuvor definierten Volumeneinheiten und iterieren über Zeit-Einheiten
                     for vol_unit in volume:
                         vol_unit_str = str(vol_unit)
                         for time_unit in time_units:
@@ -90,7 +114,6 @@ def create_units_dictionary():
                         evaluated_formula = replace_symbols_in_formula(expr, replacements)
                         units_dict[category].add(str(evaluated_formula))
 
-
     return units_dict
 
 # Erstellen des Dictionaries
@@ -98,7 +121,13 @@ units_dictionary = create_units_dictionary()
 
 def convert_symbols_to_strings(obj):
     """
-    Rekursive Funktion, um SymPy-Objekte in Strings umzuwandeln
+    Rekursive Funktion, um SymPy-Objekte in Strings umzuwandeln.
+
+    Parameters:
+    - obj: Das zu konvertierende Objekt
+
+    Returns:
+    - Das konvertierte Objekt
     """
     if isinstance(obj, (Symbol, sympy.Basic)):  # Inkludiert Relational-Objekte
         return str(obj)
@@ -111,7 +140,13 @@ def convert_symbols_to_strings(obj):
 
 def convert_sets_to_lists(obj):
     """
-    Rekursive Funktion, um Set-Objekte in sortierte Listen umzuwandeln
+    Rekursive Funktion, um Set-Objekte in sortierte Listen umzuwandeln.
+
+    Parameters:
+    - obj: Das zu konvertierende Objekt
+
+    Returns:
+    - Das konvertierte Objekt
     """
     if isinstance(obj, set):
         return sorted([convert_sets_to_lists(item) for item in obj])

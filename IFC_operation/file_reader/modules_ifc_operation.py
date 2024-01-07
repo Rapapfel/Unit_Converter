@@ -6,27 +6,36 @@ import sympy.physics.units as u
 import json
 from tqdm import tqdm
 
-""" 
-New Created Modules
-"""
-# IFC Path import and validation
+# IFC-Pfad importieren und validieren
 def is_ifc_file(VAR_FILEPATH:str):
     """
-    Shall open the IFC-File with the given Filepath, except when it isn't a IFC-File od corrupdet
-    
-    Parameters:
-    - VAR_FILEPATH: Filepath
+    Diese Funktion versucht, die IFC-Datei mit dem angegebenen Dateipfad zu öffnen, es sei denn, es handelt sich nicht um eine IFC-Datei oder sie ist beschädigt.
+
+    Args:
+    - VAR_FILEPATH (str): Dateipfad zur IFC-Datei.
+
+    Returns:
+    - bool: True, wenn die Datei eine gültige IFC-Datei ist, andernfalls False.
     """
     try:
-        # Try to open the IFC file
+        # Versuchen, die IFC-Datei zu öffnen
         ifc_file = ifcopenshell.open(VAR_FILEPATH)
         return True
     except Exception as e:
-        # If it's not a IFC file or corrupted it returns False
+        # Wenn es sich nicht um eine IFC-Datei handelt oder sie beschädigt ist, wird False zurückgegeben
         return False
 
-# alle IFC Parameter in Dictionary
+# Alle IFC-Parameter in ein Dictionary extrahieren
 def extract_pset_parameters(VAR_FILEPATH):
+    """
+    Diese Funktion extrahiert alle Pset-Parameter aus einer IFC-Datei und gibt sie in Form eines Dictionaries zurück.
+
+    Args:
+    - VAR_FILEPATH (str): Dateipfad zur IFC-Datei.
+
+    Returns:
+    - dict: Ein Dictionary, das Pset-Namen als Schlüssel und Listen von Parameter-Namen als Werte enthält.
+    """
     try:
         ifc_file = ifcopenshell.open(VAR_FILEPATH)
         pset_dict = {}
@@ -62,13 +71,34 @@ def extract_pset_parameters(VAR_FILEPATH):
 
 # Funktion zum Parsen der Einheiten
 def parse_unit(unit_str):
-    # Ersetzt Multiplikations- und Divisionssymbole für das Parsing
+    """
+    Diese Funktion ersetzt Multiplikations- und Divisionssymbole im Einheitenstring und erstellt einen sympy-Ausdruck daraus.
+
+    Args:
+    - unit_str (str): Einheitenstring.
+
+    Returns:
+    - sympy.Expr: Ein sympy-Ausdruck, der die Einheiten repräsentiert.
+    """
+    # Ersetzt Multiplikations- und Divisionssymbole für das Parsen
     unit_str = unit_str.replace('/', ' / ').replace('*', ' * ')
     # Erstellt einen sympy-Ausdruck aus dem String
     return sympify(unit_str, locals=u.__dict__)
 
-# Extract, Convert and Resave Units
+# Funktion zum Konvertieren von Werten zwischen Einheiten
 def convert_value(value, source_unit_str, target_unit_str, decimal_places=2):
+    """
+    Konvertiert einen Wert von einer Quelleinheit in eine Zieleinheit und rundet das Ergebnis auf die gewünschte Anzahl von Dezimalstellen.
+
+    Args:
+    - value (float): Der zu konvertierende Wert.
+    - source_unit_str (str): Einheitenstring der Quelleinheit.
+    - target_unit_str (str): Einheitenstring der Zieleinheit.
+    - decimal_places (int, optional): Anzahl der Dezimalstellen für das gerundete Ergebnis. Standardmäßig auf 2 gesetzt.
+
+    Returns:
+    - float: Der konvertierte und gerundete Wert.
+    """
     x = symbols('x')
     source_unit = parse_unit(source_unit_str)
     target_unit = parse_unit(target_unit_str)
@@ -82,17 +112,16 @@ def convert_value(value, source_unit_str, target_unit_str, decimal_places=2):
     return rounded_value
 
 def extract_data_and_update_ifc(VAR_FILEPATH, selected_save_file_path, template_name):
+    """
+    Extrahiert aus der IFC-Datei (VAR_FILEPATH) alle ausgewählten Psets (dict_selected_type) mit den ausgewählten Eigenschaften (dict_selected_properties).
+    Konvertiert dann jede der ausgewählten Eigenschaften mit den bereits ausgewählten Einheiten in die ebenfalls ausgewählte Ziel-Einheit.
+
+    Args:
+    - VAR_FILEPATH (str): Dateipfad zur IFC-Datei.
+    - selected_save_file_path (str): Dateipfad, unter dem die aktualisierte IFC-Datei gespeichert wird.
+    - template_name (str): Der Name des Templates.
 
     """
-    Imports from the IFC-File (VAR_FILEPATH) all selected Psets (dict_selected_type) with the selected properties (dict_selected_properties).
-    Then converts eache of the selected properties with the already selected units to the also selected target unit.
-    
-    Parameters:
-    - VAR_FILEPATH: Filepath
-    - dict_selected_type: The Dictionary with the selected Pset's
-    - dict_selected_properties: The Dictionary with the selectedfilepath
-    """
-
     # Pfad des aktuellen Skripts und Pfad zum JSON-File
     current_script = os.path.dirname(os.path.realpath(__file__))
     json_path = os.path.join(current_script, "..", "..", "Templates", "custom_templates",template_name+".json")
@@ -104,19 +133,19 @@ def extract_data_and_update_ifc(VAR_FILEPATH, selected_save_file_path, template_
     # Extraktion der 'parameters' aus dem JSON-File
     selected_dict = template_data.get("parameters", {})
 
-    # Load the IFC file
+    # Laden der IFC-Datei
     ifc_file = ifcopenshell.open(VAR_FILEPATH)
     ID_set= set()
 
     for dict_packet in selected_dict.keys():
-        key_list = dict_packet.split(" â€” ")
+        key_list = dict_packet.split(" — ")
 
-        # Iterate through all IfcPropertySet objects in the IFC file
+        # Durchlaufen aller IfcPropertySet-Objekte in der IFC-Datei
         for ifc_pset in tqdm(ifc_file.by_type("IfcPropertySet")):
             pset_name = ifc_pset.Name
-            # Check if the current PSet is in the selected parameters
+            # Überprüfen, ob das aktuelle PSet in den ausgewählten Parametern ist
             if pset_name in key_list[0]:
-                # Iterate through the properties within the PSet
+                # Durchlaufen der Eigenschaften innerhalb des PSet
                 for ifc_property in ifc_pset.HasProperties:
                     ID = str(ifc_property).split("=")[0]
                     if ID in ID_set:
@@ -124,31 +153,22 @@ def extract_data_and_update_ifc(VAR_FILEPATH, selected_save_file_path, template_
                     else:
                         ID_set.add(ID)
 
-                    # Extract category name from the property
+                    # Extrahieren des Kategorienamen aus der Eigenschaft
                     property_category = ifc_property.Name
 
-                    # Check if the category is in the selected parameters
+                    # Überprüfen, ob die Kategorie in den ausgewählten Parametern ist
                     if property_category == key_list[1]:
                         source_unit_name = selected_dict[dict_packet]['source_unit']
                         target_unit_name = selected_dict[dict_packet]['target_unit']
-                        # print (property_category,source_unit_name, target_unit_name)
 
-                        # Access and convert property value using sympy
+                        # Zugriff und Konvertierung des Eigenschaftswerts unter Verwendung von sympy
                         property_value = getattr(ifc_property, "NominalValue", None).wrappedValue
-                        # print(property_value)
 
                         if property_value is not None:
                             converted_value = convert_value(property_value, source_unit_name, target_unit_name)
-                            # print("Converted-Value", converted_value)
 
-                            # Update the IFC file with the converted value
+                            # Aktualisieren der IFC-Datei mit dem konvertierten Wert
                             ifc_property.NominalValue.wrappedValue = converted_value
 
-
-    # Save the modified IFC file
+    # Speichern der modifizierten IFC-Datei
     ifc_file.write(selected_save_file_path)
-
-
-
-
-

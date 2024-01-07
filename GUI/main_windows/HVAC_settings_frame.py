@@ -54,6 +54,15 @@ class HLKSEinstellungen(ctk.CTk):
 
     # Methode zum Erstellen einer scrollbaren Registerkarte
     def create_scrollable_tab(self, title):
+        """
+        Erstellt eine scrollbare Registerkarte mit Überschriften für Parameter und Zieleinheit.
+
+        Args:
+            title: Der Titel der Registerkarte.
+
+        Returns:
+            Ein scrollbares Frame-Objekt für die Registerkarte.
+        """
         tab = ttk.Frame(self.tab_control, style='TFrame')
         self.tab_control.add(tab, text=title)
 
@@ -89,12 +98,22 @@ class HLKSEinstellungen(ctk.CTk):
 
     # Methode zum Laden der Einstellungen aus JSON-Dateien
     def load_einstellungen(self):
+        """
+        Lädt die Einstellungen aus JSON-Dateien und zeigt sie auf den Registerkarten an.
+        """
         self.einstellungen_anzeigen(self.tab_heizung, os.path.join(self.templates_dir, "HVAC_units_HEI.json"))
         self.einstellungen_anzeigen(self.tab_lueftung, os.path.join(self.templates_dir, "HVAC_units_LUF.json"))
         self.einstellungen_anzeigen(self.tab_sanitaer, os.path.join(self.templates_dir, "HVAC_units_SAN.json"))
 
     # Methode zum Anzeigen der Einstellungen auf einer Registerkarte
     def einstellungen_anzeigen(self, scrollable_frame, json_file):
+        """
+        Zeigt die Einstellungen aus einer JSON-Datei auf einer Registerkarte an.
+
+        Args:
+            scrollable_frame: Das scrollbare Frame-Objekt der Registerkarte.
+            json_file: Der Pfad zur JSON-Datei mit den Einstellungen.
+        """
         try:
             with open(json_file, "r") as file:
                 einstellungen = json.load(file)
@@ -108,10 +127,20 @@ class HLKSEinstellungen(ctk.CTk):
 
     # Methode für die Aktion, die beim Klicken auf die "Weiter"-Schaltfläche ausgeführt wird
     def weiter_aktion(self):
+        """
+        Aktion, die beim Klicken auf die "Weiter"-Schaltfläche ausgeführt wird.
+        """
         pass
 
     # Methode zum Scrollen im Canvas-Bereich mit dem Mausrad
     def scroll_canvas_area(self, event, canvas):
+        """
+        Erlaubt das Scrollen im Canvas-Bereich mit dem Mausrad.
+
+        Args:
+            event: Das Mausradereignis.
+            canvas: Das Canvas-Widget, das gescrollt werden soll.
+        """
         if event.delta:
             canvas.yview_scroll(-1 * (event.delta // 120), "units")
 

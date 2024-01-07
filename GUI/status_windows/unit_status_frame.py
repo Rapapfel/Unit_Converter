@@ -1,11 +1,19 @@
 import customtkinter as ctk
 
+# Die Klasse unit_status_frame erstellen, die ein Toplevel-Fenster für Einheitsinformationen darstellt
 class unit_status_frame(ctk.CTkToplevel):
     def __init__(self, root, einheit):
+        """
+        Konstruktor für die unit_status_frame-Klasse.
+        
+        Args:
+            root (ctk.CTk): Das übergeordnete Hauptfenster.
+            einheit (str): Die Einheit, die angezeigt werden soll.
+        """
         super().__init__(root)
         self.title("Einheitsinformation")
         self.geometry("400x200")
-        self.attributes("-topmost",True)
+        self.attributes("-topmost", True)
 
         self.einheit = einheit
         self.root = root
@@ -13,6 +21,9 @@ class unit_status_frame(ctk.CTkToplevel):
         self.fenster_zentrieren()
 
     def widgets_erstellen(self):
+        """
+        Erstellt die GUI-Elemente im Toplevel-Fenster.
+        """
         # Nachricht über die Einheit des IFCs
         nachricht = f"Das ausgewählte IFC wurde mit {self.einheit} erstellt."
         self.Einheitsinformation = ctk.CTkLabel(self, text=nachricht)
@@ -23,6 +34,9 @@ class unit_status_frame(ctk.CTkToplevel):
         self.ok_button.place(relx=0.5, rely=0.7, anchor=ctk.CENTER)
 
     def fenster_zentrieren(self):
+        """
+        Zentriert das Toplevel-Fenster relativ zum Hauptfenster.
+        """
         root_x = self.master.winfo_x()
         root_y = self.master.winfo_y()
         root_width = self.master.winfo_width()
@@ -34,10 +48,13 @@ class unit_status_frame(ctk.CTkToplevel):
         self.geometry(f"+{x_position}+{y_position}")
 
     def fenster_schliessen(self):
+        """
+        Aktion, die beim Klicken auf die "OK"-Schaltfläche ausgeführt wird, um das Fenster zu schließen.
+        """
         self.quit()
         self.destroy()
-        
 
+# Hauptprogramm
 if __name__ == "__main__":
     # Erstellen eines Hauptfensters
     root = ctk.CTk()
