@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from tkinter import filedialog
 
-class FileSelectorFrame(ctk.CTkFrame):
+class file_selector_frame(ctk.CTkFrame):
     def __init__(self, container, X, Y):
         """
         Konstruktor für die FileSelectorFrame-Klasse.
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     root.geometry(f"{window_width}x{window_height}+{x_position}+{y_position}")
 
     # Instanziieren und Anzeigen des Frames
-    frame = FileSelectorFrame(root, window_width - 60, window_height)
+    frame = file_selector_frame(root, window_width - 60, window_height)
     frame.pack(fill="both", expand=True)
 
     # Starten des Event-Loops

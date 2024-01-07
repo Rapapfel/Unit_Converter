@@ -218,135 +218,134 @@ class bearbeiten_template_frame(ctk.CTkFrame):
         self.grid_frame.update_idletasks()
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
-def scroll_canvas_area(self, event, canvas):
-    """
-    Scrollt den Bereich der Leinwand basierend auf dem Mausradereignis.
+    def scroll_canvas_area(self, event, canvas):
+        """
+        Scrollt den Bereich der Leinwand basierend auf dem Mausradereignis.
 
-    Args:
-        event (Event): Das Mausradereignis.
-        canvas (Canvas): Die Leinwand, die gescrollt werden soll.
-    """
-    canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        Args:
+            event (Event): Das Mausradereignis.
+            canvas (Canvas): Die Leinwand, die gescrollt werden soll.
+        """
+        canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
-def is_row_complete(self, row_widgets):
-    """
-    Überprüft, ob alle Widgets in einer Zeile einen ausgewählten Wert haben.
+    def is_row_complete(self, row_widgets):
+        """
+        Überprüft, ob alle Widgets in einer Zeile einen ausgewählten Wert haben.
 
-    Args:
-        row_widgets (Tuple): Die Widgets in der Zeile.
+        Args:
+            row_widgets (Tuple): Die Widgets in der Zeile.
 
-    Returns:
-        bool: True, wenn alle Widgets einen ausgewählten Wert haben, sonst False.
-    """
-    pset_dropdown, param_dropdown, category_dropdown, source_unit_dropdown, target_unit_dropdown, remove_button = row_widgets
-    return pset_dropdown.get() and param_dropdown.get() and category_dropdown.get() and source_unit_dropdown.get() and target_unit_dropdown.get()
+        Returns:
+            bool: True, wenn alle Widgets einen ausgewählten Wert haben, sonst False.
+        """
+        pset_dropdown, param_dropdown, category_dropdown, source_unit_dropdown, target_unit_dropdown, remove_button = row_widgets
+        return pset_dropdown.get() and param_dropdown.get() and category_dropdown.get() and source_unit_dropdown.get() and target_unit_dropdown.get()
 
-def remove_row(self, row_index):
-    """
-    Entfernt eine Zeile aus der Benutzeroberfläche und aktualisiert die Scrollregion.
+    def remove_row(self, row_index):
+        """
+        Entfernt eine Zeile aus der Benutzeroberfläche und aktualisiert die Scrollregion.
 
-    Args:
-        row_index (int): Der Index der zu entfernenden Zeile.
-    """
-    widgets_to_remove = self.rows.pop(row_index - 1)
-    for widget in widgets_to_remove:
-        widget.destroy()
-    self.update_scrollregion()
+        Args:
+            row_index (int): Der Index der zu entfernenden Zeile.
+        """
+        widgets_to_remove = self.rows.pop(row_index - 1)
+        for widget in widgets_to_remove:
+            widget.destroy()
+        self.update_scrollregion()
 
-def update_pset_dropdown(self, pset_dropdown, param_dropdown, source_unit_dropdown, target_unit_dropdown, category_dropdown):
-    """
-    Aktualisiert das Parameter-Set Dropdown basierend auf dem ausgewählten Wert der vorherigen Dropdowns.
+    def update_pset_dropdown(self, pset_dropdown, param_dropdown, source_unit_dropdown, target_unit_dropdown, category_dropdown):
+        """
+        Aktualisiert das Parameter-Set Dropdown basierend auf dem ausgewählten Wert der vorherigen Dropdowns.
 
-    Args:
-        pset_dropdown (Dropdown): Das Dropdown für das Parameter-Set.
-        param_dropdown (Dropdown): Das Dropdown für die Parameter.
-        source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
-        target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
-        category_dropdown (Dropdown): Das Dropdown für die Kategorie.
-    """
-    selected_pset = pset_dropdown.get()
-    param_dropdown["values"] = self.parameter_dict[selected_pset]
-    param_dropdown.set("")
-    category_dropdown.set("")
-    source_unit_dropdown.set("")
-    target_unit_dropdown.set("")
-
-def update_param_dropdown(self, source_unit_dropdown, target_unit_dropdown, category_dropdown):
-    """
-    Aktualisiert das Parameter-Dropdown basierend auf dem ausgewählten Wert des Kategorien-Dropdowns.
-
-    Args:
-        source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
-        target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
-        category_dropdown (Dropdown): Das Dropdown für die Kategorie.
-    """
-    category_dropdown.set("")
-    source_unit_dropdown.set("")
-    target_unit_dropdown.set("")
-
-def update_unit_dropdowns(self, category_dropdown, source_unit_dropdown, target_unit_dropdown):
-    """
-    Aktualisiert die Quell- und Zieleinheit-Dropdowns basierend auf dem ausgewählten Wert des Kategorien-Dropdowns.
-
-    Args:
-        category_dropdown (Dropdown): Das Dropdown für die Kategorie.
-        source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
-        target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
-    """
-    selected_category = category_dropdown.get()
-    if selected_category:
-        units = self.unit_categories[selected_category]
-        source_unit_dropdown["values"] = units
-        target_unit_dropdown["values"] = units
+        Args:
+            pset_dropdown (Dropdown): Das Dropdown für das Parameter-Set.
+            param_dropdown (Dropdown): Das Dropdown für die Parameter.
+            source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
+            target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
+            category_dropdown (Dropdown): Das Dropdown für die Kategorie.
+        """
+        selected_pset = pset_dropdown.get()
+        param_dropdown["values"] = self.parameter_dict[selected_pset]
+        param_dropdown.set("")
+        category_dropdown.set("")
         source_unit_dropdown.set("")
-        target_unit_dropdown.set("")  
+        target_unit_dropdown.set("")
 
-def transform_selected_parameters_to_dict(self):
-    """
-    Wandelt die ausgewählten Parameter in ein Wörterbuch um.
+    def update_param_dropdown(self, source_unit_dropdown, target_unit_dropdown, category_dropdown):
+        """
+        Aktualisiert das Parameter-Dropdown basierend auf dem ausgewählten Wert des Kategorien-Dropdowns.
 
-    Returns:
-        dict: Das Wörterbuch der ausgewählten Parameter.
-    """
-    selected_parameters = {}
-    for row_widgets in self.rows:
-        pset_dropdown, param_dropdown, category_unit, source_unit, target_unit, _ = row_widgets
-        if pset_dropdown.get() and param_dropdown.get() and source_unit.get() and target_unit.get():
-            pset_name = pset_dropdown.get()
-            param_name = param_dropdown.get()
-            category_name = category_unit.get()
-            source_unit_name = source_unit.get()
-            target_unit_name = target_unit.get()
-            selected_parameters[f"{pset_name} — {param_name} — {category_name}"] = {
-                "source_unit": source_unit_name,
-                "target_unit": target_unit_name
+        Args:
+            source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
+            target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
+            category_dropdown (Dropdown): Das Dropdown für die Kategorie.
+        """
+        category_dropdown.set("")
+        source_unit_dropdown.set("")
+        target_unit_dropdown.set("")
+
+    def update_unit_dropdowns(self, category_dropdown, source_unit_dropdown, target_unit_dropdown):
+        """
+        Aktualisiert die Quell- und Zieleinheit-Dropdowns basierend auf dem ausgewählten Wert des Kategorien-Dropdowns.
+
+        Args:
+            category_dropdown (Dropdown): Das Dropdown für die Kategorie.
+            source_unit_dropdown (Dropdown): Das Dropdown für die Quelleinheit.
+            target_unit_dropdown (Dropdown): Das Dropdown für die Zieleinheit.
+        """
+        selected_category = category_dropdown.get()
+        if selected_category:
+            units = self.unit_categories[selected_category]
+            source_unit_dropdown["values"] = units
+            target_unit_dropdown["values"] = units
+            source_unit_dropdown.set("")
+            target_unit_dropdown.set("")  
+
+    def transform_selected_parameters_to_dict(self):
+        """
+        Wandelt die ausgewählten Parameter in ein Wörterbuch um.
+
+        Returns:
+            dict: Das Wörterbuch der ausgewählten Parameter.
+        """
+        selected_parameters = {}
+        for row_widgets in self.rows:
+            pset_dropdown, param_dropdown, category_unit, source_unit, target_unit, _ = row_widgets
+            if pset_dropdown.get() and param_dropdown.get() and source_unit.get() and target_unit.get():
+                pset_name = pset_dropdown.get()
+                param_name = param_dropdown.get()
+                category_name = category_unit.get()
+                source_unit_name = source_unit.get()
+                target_unit_name = target_unit.get()
+                selected_parameters[f"{pset_name} — {param_name} — {category_name}"] = {
+                    "source_unit": source_unit_name,
+                    "target_unit": target_unit_name
+                }
+        return selected_parameters
+
+    def ändern_aktion(self):
+        """
+        Führt die Aktion der Template-Änderung basierend auf den eingegebenen Werten aus.
+        """
+        if self.ändern_button:
+            name_template_neu = self.name_template_entry.get()
+            bearbeitet_durch = self.bearbeitet_durch_entry.get()
+            beschreibung_template = self.beschreibung_template_entry.get()
+            selected_parameters = self.transform_selected_parameters_to_dict()
+
+            template_data = {
+                "template_name_new": name_template_neu,
+                "modified_by": bearbeitet_durch,
+                "description": beschreibung_template,
+                "parameters": selected_parameters
             }
-    return selected_parameters
 
-def ändern_aktion(self):
-    """
-    Führt die Aktion der Template-Änderung basierend auf den eingegebenen Werten aus.
-    """
-    if self.ändern_button:
-        name_template_neu = self.name_template_entry.get()
-        bearbeitet_durch = self.bearbeitet_durch_entry.get()
-        beschreibung_template = self.beschreibung_template_entry.get()
-        selected_parameters = self.transform_selected_parameters_to_dict()
+            self.container.ändern_template_callback(template_data)
 
-        template_data = {
-            "template_name_new": name_template_neu,
-            "modified_by": bearbeitet_durch,
-            "description": beschreibung_template,
-            "parameters": selected_parameters
-        }
-
-        self.container.ändern_template_callback(template_data)
-
-def abbrechen_aktion(self):
-    """
-    Führt die Aktion der Template-Abbruch aus.
-    """
-    if self.abbrechen_aktion:
+    def abbrechen_aktion(self):
+        """
+        Führt die Aktion der Template-Abbruch aus.
+        """
         self.container.abbrechen_template_callback()
 
 if __name__ == "__main__":

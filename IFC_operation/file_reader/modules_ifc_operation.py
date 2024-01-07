@@ -138,7 +138,7 @@ def extract_data_and_update_ifc(VAR_FILEPATH, selected_save_file_path, template_
     ID_set= set()
 
     for dict_packet in selected_dict.keys():
-        key_list = dict_packet.split(" — ")
+        key_list = dict_packet.split(" â€” ")
 
         # Durchlaufen aller IfcPropertySet-Objekte in der IFC-Datei
         for ifc_pset in tqdm(ifc_file.by_type("IfcPropertySet")):
