@@ -1,0 +1,16 @@
+{
+    "template_name": "Druckverlust",
+    "last_modified": "2024-01-08 14:51:02",
+    "modified_by": "Max Mustermann",
+    "description": "wandelt alle Druckverluste von pascal in kilopascal",
+    "parameters": {
+        "Pset MEP — Calc-Pressure loss (Pa) — Druck": {
+            "source_unit": "pascal",
+            "target_unit": "kilopascal"
+        },
+        "Pset MEP — Calc-Required throttling (Pa) — Druck": {
+            "source_unit": "pascal",
+            "target_unit": "kilopascal"
+        }
+    }
+}

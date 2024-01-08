@@ -1,0 +1,16 @@
+{
+    "template_name": "Rohrdimensionen",
+    "last_modified": "2024-01-08 14:48:04",
+    "modified_by": "Luca Baumann",
+    "description": "ändert alle Rohrgrössen von m zu mm",
+    "parameters": {
+        "CH_Pset_HEI — Daemmungsstaerke — Länge": {
+            "source_unit": "meter",
+            "target_unit": "millimeter"
+        },
+        "CH_Pset_HEI — Durchmesser — Länge": {
+            "source_unit": "meter",
+            "target_unit": "millimeter"
+        }
+    }
+}
