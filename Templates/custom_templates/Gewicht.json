@@ -1,0 +1,12 @@
+{
+    "template_name": "Gewicht",
+    "last_modified": "2024-01-08 14:52:38",
+    "modified_by": "Bob der Baumeister",
+    "description": "wandelt alle Gewichte von kg in g",
+    "parameters": {
+        "Pset MEP — Tech-Weight (kg) — Masse": {
+            "source_unit": "kilogram",
+            "target_unit": "gram"
+        }
+    }
+}
